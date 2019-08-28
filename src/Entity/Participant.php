@@ -128,7 +128,7 @@ class Participant implements UserInterface
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
 
@@ -140,7 +140,7 @@ class Participant implements UserInterface
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(?string $prenom): self
     {
         $this->prenom = $prenom;
 
@@ -152,7 +152,7 @@ class Participant implements UserInterface
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
 
@@ -176,7 +176,7 @@ class Participant implements UserInterface
         return $this->mail;
     }
 
-    public function setMail(string $mail): self
+    public function setMail(?string $mail): self
     {
         $this->mail = $mail;
 
@@ -188,7 +188,7 @@ class Participant implements UserInterface
         return $this->motDePasse;
     }
 
-    public function setMotDePasse(string $motDePasse): self
+    public function setMotDePasse(?string $motDePasse): self
     {
         $this->motDePasse = $motDePasse;
 
@@ -200,7 +200,7 @@ class Participant implements UserInterface
         return $this->admin;
     }
 
-    public function setAdmin(bool $admin): self
+    public function setAdmin(?bool $admin): self
     {
         $this->admin = $admin;
 
@@ -212,7 +212,7 @@ class Participant implements UserInterface
         return $this->actif;
     }
 
-    public function setActif(bool $actif): self
+    public function setActif(?bool $actif): self
     {
         $this->actif = $actif;
 
