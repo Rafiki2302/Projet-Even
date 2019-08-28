@@ -98,12 +98,12 @@ class Participant implements UserInterface
     private $site;
 
     /**
-    @ORM\OneToMany (targetEntity = "Sortie", mappedBy= "participant")
+     * @ORM\OneToMany (targetEntity = "Sortie", mappedBy= "participant")
      */
     private $listSortieOrg;
 
     /**
-    @ORM\ManyToMany(targetEntity="Sortie", inversedBy="participants")
+     * @ORM\ManyToMany(targetEntity="Sortie", inversedBy="participants")
      */
     private $listSortiesInsc;
 
