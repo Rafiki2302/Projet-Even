@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
@@ -19,26 +21,41 @@ class Participant implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=30)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=30)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Regex("#^0[1-9]{9}$#", message="Numéro de téléphone incorrect, ressaisissez")
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Email(message="{{ value }} n'est pas un format d'email valide, ressaisissez")
      */
     private $mail;
 

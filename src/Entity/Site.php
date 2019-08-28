@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SiteRepository")
@@ -19,6 +20,9 @@ class Site
 
     /**
      * @ORM\Column(type="string", length=30)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom du site ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
