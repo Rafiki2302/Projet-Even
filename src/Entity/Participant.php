@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
@@ -19,26 +21,41 @@ class Participant implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=30)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=30)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Regex("#^0[1-9]{9}$#", message="Numéro de téléphone incorrect, ressaisissez")
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Email(message="{{ value }} n'est pas un format d'email valide, ressaisissez")
      */
     private $mail;
 
@@ -81,12 +98,12 @@ class Participant implements UserInterface
     private $site;
 
     /**
-     *
+     * @ORM\OneToMany (targetEntity = "Sortie", mappedBy= "participant")
      */
     private $listSortieOrg;
 
     /**
-     *
+     * @ORM\ManyToMany(targetEntity="Sortie", inversedBy="participants")
      */
     private $listSortiesInsc;
 
@@ -111,7 +128,7 @@ class Participant implements UserInterface
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
 
@@ -123,7 +140,7 @@ class Participant implements UserInterface
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(?string $prenom): self
     {
         $this->prenom = $prenom;
 
@@ -135,7 +152,7 @@ class Participant implements UserInterface
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
 
@@ -159,7 +176,7 @@ class Participant implements UserInterface
         return $this->mail;
     }
 
-    public function setMail(string $mail): self
+    public function setMail(?string $mail): self
     {
         $this->mail = $mail;
 
@@ -171,7 +188,7 @@ class Participant implements UserInterface
         return $this->motDePasse;
     }
 
-    public function setMotDePasse(string $motDePasse): self
+    public function setMotDePasse(?string $motDePasse): self
     {
         $this->motDePasse = $motDePasse;
 
@@ -183,7 +200,7 @@ class Participant implements UserInterface
         return $this->admin;
     }
 
-    public function setAdmin(bool $admin): self
+    public function setAdmin(?bool $admin): self
     {
         $this->admin = $admin;
 
@@ -195,7 +212,7 @@ class Participant implements UserInterface
         return $this->actif;
     }
 
-    public function setActif(bool $actif): self
+    public function setActif(?bool $actif): self
     {
         $this->actif = $actif;
 

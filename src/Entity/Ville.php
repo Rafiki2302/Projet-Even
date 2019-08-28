@@ -4,12 +4,12 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Collection;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SiteRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\VilleRepository")
  */
-class Site
+class Ville
 {
     /**
      * @ORM\Id()
@@ -20,25 +20,23 @@ class Site
 
     /**
      * @ORM\Column(type="string", length=30)
-     *
-     * @Assert\NotBlank(message="Le champ doit être rempli")
-     * @Assert\Length(max=30,maxMessage="Le nom du site ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
     /**
-     *@ORM\OneToMany(targetEntity="Participant", mappedBy="site")
+     * @ORM\Column(type="integer")
      */
-    private $listUsers;
+    private $codePostal;
 
     /**
-     * Site constructor.
+     * @ORM\OneToMany (targetEntity = "Lieu", mappedBy= "ville")
      */
+    private $lieus;
+
     public function __construct()
     {
-        $this->listUsers = new ArrayCollection();
+        $this->lieus = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -57,15 +55,24 @@ class Site
         return $this;
     }
 
-    public function getListUsers()
+    public function getCodePostal(): ?int
     {
-        return $this->listUsers;
+        return $this->codePostal;
     }
 
-    public function setListUsers($listUsers): self
+    public function setCodePostal(int $codePostal): self
     {
-        $this->listUsers = $listUsers;
+        $this->codePostal = $codePostal;
 
         return $this;
     }
+
+    /**
+     * @return Collection|Lieu[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->lieus;
+    }
+
 }

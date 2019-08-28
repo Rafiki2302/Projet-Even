@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Service\ParticipantService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,21 +30,33 @@ class ParticipantController extends Controller
     /**
      * @Route("/new", name="participant_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserPasswordEncoderInterface $encoder): Response
+    public function new(Request $request, UserPasswordEncoderInterface $encoder, ParticipantService $participantService): Response
     {
         $participant = new Participant();
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $participant->setMotDePasse($encoder->encodePassword($participant,$form->get("motDePasseEnClair")->getData()));
-            $entityManager->persist($participant);
-            $entityManager->flush();
+        //si clic sur le bouton valider...
+        if($form->isSubmitted()){
+            //on checke que le pw respecte les contraintes
+            //si ne respecte pas : ajoute message erreur à afficher dans la page du formulaire d'inscription
+            if(!$participantService->validatePassword($form->get("motDePasseEnClair")->getData())){
+                $this->addFlash('erreur',"Mot de passe incorrect : il doit contenir au moins 8 caractères dont une minuscule,
+                     une majuscule, un chiffre et un caractère spécial");
+            }
+            //si le pw est correct, on vérifie que les autres éléments du form sont OK, si oui, on flush
+            else{
+                if ($form->isValid()){
+                    $participant->setMotDePasse($encoder->encodePassword($participant,$form->get("motDePasseEnClair")->getData()));
 
-            return $this->redirectToRoute('participant_index');
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($participant);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('participant_index');
+                }
+            }
         }
-
         return $this->render('participant/new.html.twig', [
             'participant' => $participant,
             'form' => $form->createView(),
