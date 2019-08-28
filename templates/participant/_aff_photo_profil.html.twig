@@ -1,0 +1,7 @@
+{# Si la personne a uploadé une image de profil, elle est chargée. Sinon, une image de profil lambda s'affiche #}
+{%  set profileImage = vich_uploader_asset(participant, "imageFile") %}
+                {% if profileImage is not null %}
+                    <img src="{{ vich_uploader_asset(participant, "imageFile") }}" width="200" height="200" />
+                {% else %}
+                    <img src="{{ asset('build/images/profile.png') }}" width="200" height="200" />
+                {% endif %}

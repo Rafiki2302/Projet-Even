@@ -6,6 +6,7 @@ use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Service\ParticipantService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +41,7 @@ class ParticipantController extends Controller
         if($form->isSubmitted()){
             //on checke que le pw respecte les contraintes
             //si ne respecte pas : ajoute message erreur à afficher dans la page du formulaire d'inscription
+
             if(!$participantService->validatePassword($form->get("motDePasseEnClair")->getData())){
                 $this->addFlash('erreur',"Mot de passe incorrect : il doit contenir au moins 8 caractères dont une minuscule,
                      une majuscule, un chiffre et un caractère spécial");
@@ -47,13 +49,22 @@ class ParticipantController extends Controller
             //si le pw est correct, on vérifie que les autres éléments du form sont OK, si oui, on flush
             else{
                 if ($form->isValid()){
-                    $participant->setMotDePasse($encoder->encodePassword($participant,$form->get("motDePasseEnClair")->getData()));
 
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($participant);
-                    $entityManager->flush();
+                    try{
+                        $participant->setMotDePasse($encoder->encodePassword($participant,$form->get("motDePasseEnClair")->getData()));
 
-                    return $this->redirectToRoute('participant_index');
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->persist($participant);
+                        $entityManager->flush();
+
+                        return $this->redirectToRoute('participant_index');
+                    }
+                    catch (UniqueConstraintViolationException $exception){
+                        $this->addFlash("erreurUnique","Le pseudo ou l'email est déjà utilisé par un autre participant");
+                    }
+
+
+
                 }
             }
         }
@@ -76,15 +87,37 @@ class ParticipantController extends Controller
     /**
      * @Route("/{id}/edit", name="participant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Participant $participant): Response
+    public function edit(Request $request, Participant $participant, ParticipantService $participantService, UserPasswordEncoderInterface $encoder): Response
     {
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        if($form->isSubmitted()){
+            //on checke que le pw respecte les contraintes
+            //si ne respecte pas : ajoute message erreur à afficher dans la page de la modif du profil
+            if(!$participantService->validatePassword($form->get("motDePasseEnClair")->getData())){
+                $this->addFlash('erreur',"Mot de passe incorrect : il doit contenir au moins 8 caractères dont une minuscule,
+                     une majuscule, un chiffre et un caractère spécial");
+            }
+            //si le pw est correct, on vérifie que les autres éléments du form sont OK, si oui, on flush
+            else{
+                if ($form->isValid()){
 
-            return $this->redirectToRoute('participant_index');
+                    try{
+                        $participant->setMotDePasse($encoder->encodePassword($participant,$form->get("motDePasseEnClair")->getData()));
+
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->flush();
+
+                        return $this->redirectToRoute('participant_index');
+                    }
+                    //si le pw ou l'email est déjà présent en BDD, cela renverra cette exception
+                    catch (UniqueConstraintViolationException $exception){
+                        $this->addFlash("erreurUnique","Le pseudo ou l'email est déjà utilisé par un autre participant");
+                    }
+
+                }
+            }
         }
 
         return $this->render('participant/edit.html.twig', [
@@ -106,4 +139,5 @@ class ParticipantController extends Controller
 
         return $this->redirectToRoute('participant_index');
     }
+
 }

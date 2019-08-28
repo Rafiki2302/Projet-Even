@@ -1,26 +1,22 @@
-{{ form_start(form) }}
-    {{ form_errors(form.nom) }}
-    {{ form_label(form.nom) }}
-    {{ form_widget(form.nom) }}
-    {{ form_errors(form.prenom) }}
-    {{ form_label(form.prenom) }}
-    {{ form_widget(form.prenom) }}
-    {{ form_errors(form.pseudo) }}
-    {{ form_label(form.pseudo) }}
-    {{ form_widget(form.pseudo) }}
-    {{ form_errors(form.telephone) }}
-    {{ form_label(form.telephone) }}
-    {{ form_widget(form.telephone) }}
-    {{ form_errors(form.mail) }}
-    {{ form_label(form.mail) }}
-    {{ form_widget(form.mail) }}
-    {% for message in app.flashes('erreur') %}
-        {{ message }}
-    {% endfor %}
-    {{ form_widget(form.motDePasseEnClair) }}
-    {{ form_errors(form.site) }}
-    {{ form_label(form.site) }}
-    {{ form_widget(form.site) }}
+<div class="col-lg-12 text-center">
+    {{ form_start(form) }}
+        {% for message in app.flashes('erreurUnique') %}
+            {{ message }}
+        {% endfor %}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.prenom) }}
+        {{ form_row(form.pseudo) }}
+        {{ form_row(form.telephone) }}
+        {{ form_row(form.mail) }}
+        {% for message in app.flashes('erreur') %}
+            {{ message }}
+        {% endfor %}
+        {{ form_widget(form.motDePasseEnClair) }}
+        {{ form_row(form.site) }}
+        {{ form_row(form.imageFile) }}
 
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_end(form) }}
+        <a href="{{ path('app_login') }}" class="btn btn-secondary">Annuler</a>
+</div>
+

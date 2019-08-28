@@ -3,9 +3,11 @@
 {% block title %}New Participant{% endblock %}
 
 {% block body %}
-    <h1>Create new Participant</h1>
+    <h1 class="text-center">Créer un nouveau profil</h1>
+    <div class="container">
+        <div class="row">
+            {{ include('participant/_form.html.twig') }}
 
-    {{ include('participant/_form.html.twig') }}
-
-    <a href="{{ path('participant_index') }}">back to list</a>
+        </div>
+    </div>
 {% endblock %}

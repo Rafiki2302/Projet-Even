@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
+ *
+ * @Vich\Uploadable()
  */
 class Participant implements UserInterface
 {
@@ -82,14 +86,39 @@ class Participant implements UserInterface
     private $roles;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $urlImg;
 
     /**
+     * @var File
      *
+     * @Vich\UploadableField(mapping="participant_images", fileNameProperty="urlImg")
+     *
+     * @Assert\Image(
+     *     maxWidth = 3000,
+     *     maxHeight = 3000,
+     *     maxWidthMessage="La taille de l'image ne peut pas dépasser {{ max_width }} x 3000 pixels",
+     *     maxHeightMessage="La taille de l'image ne peut pas dépasser 3000 x {{ max_height }} pixels",
+     *     maxSize="2M",
+     *     maxSizeMessage="Le poids de l'image ne peut dépasser 2 Mo",
+     *     mimeTypes={"image/gif","image/jpeg","image/png"},
+     *     mimeTypesMessage="Format d'image invalide, insérez une image de format {{ types }}",
+     *     allowLandscape=false,
+     *     allowLandscapeMessage="Seules les images au format portrait son acceptées"
+     * )
      */
     private $imageFile;
+
+    /**
+     * @var \DateTime
+     * champ nécessaire au bon fonctionnement de l'upload d'image
+     * voir https://symfony.com/doc/master/bundles/EasyAdminBundle/integration/vichuploaderbundle.html
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="listUsers")
@@ -116,7 +145,6 @@ class Participant implements UserInterface
         $this->setActif(true);
         $this->setAdmin(false);
     }
-
 
     public function getId(): ?int
     {
@@ -236,9 +264,14 @@ class Participant implements UserInterface
         return $this->imageFile;
     }
 
-    public function setImageFile($imageFile): self
+    public function setImageFile(?File $imageFile): self
     {
         $this->imageFile = $imageFile;
+        //pour que l'upload fonctionne, il faut qu'au moins un des champs de la BDD soit modifié, ici updateAt
+        //voir https://symfony.com/doc/master/bundles/EasyAdminBundle/integration/vichuploaderbundle.html
+        if($imageFile !== null){
+            $this->updatedAt = new \DateTime('now');
+        }
 
         return $this;
     }
