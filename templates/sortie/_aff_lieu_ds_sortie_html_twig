@@ -1,0 +1,25 @@
+{% set lieu = sortie.lieu %}
+<tr>
+    <th>Lieu :</th>
+    <td>{{ lieu.nom }}</td>
+</tr>
+<tr>
+    <th>Rue :</th>
+    <td>{{ lieu.rue }}</td>
+</tr>
+<tr>
+    <th>Code postal :</th>
+    <td>{{ lieu.ville.codepostal }}</td>
+</tr>
+{% if lieu.latitude is not null %}
+<tr>
+    <th>Latitude :</th>
+    <td>{{ lieu.latitude }}</td>
+</tr>
+{% endif %}
+{% if lieu.longitude is not null %}
+<tr>
+    <th>Longitude :</th>
+    <td>{{ lieu.longitude }}</td>
+</tr>
+{% endif %}

@@ -27,33 +27,39 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\DateTime(message="Format de date invalide")
      * @var string A "Y-m-d" formatted value
-     * @Assert\GreaterThan("today")
+     * @Assert\GreaterThan("today", message="La date de début doit être supérieure à la date actuelle")
      */
     private $datedebut;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @Assert\GreaterThan(0,message="La durée de l'événement ne peut pas être négative")
      */
     private $duree;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime()
+     * @Assert\DateTime(message="Format de date invalide")
      * @var string A "Y-m-d" formatted value
-     * @Assert\GreaterThan("today")
+     * @Assert\GreaterThan("today", message="La date de clôture doit être supérieure à la date actuelle")
      */
     private $datecloture;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="le champ nombre ne peut pas être vide")
+     * @Assert\GreaterThan(0,message="Le nombre de participants ne peut pas être négatif")
      */
     private $nbinscriptionsmax;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
+     *
+     * @Assert\NotBlank(message="le champ nom ne peut pas être vide")
+     * @Assert\Length(max=500,maxMessage="La description ne peut pas faire plus de {{ limit }} caractères")
      */
     private $descriptioninfos;
 
@@ -63,7 +69,7 @@ class Sortie
     private $organisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Participant", inversedBy="listSortieOrg")
+     * @ORM\ManyToMany(targetEntity="Participant", inversedBy="listSortiesInsc")
      */
     private $participants;
 
@@ -78,7 +84,7 @@ class Sortie
     private $etat;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Site", inversedBy="sortie")
+     * @ORM\ManyToOne(targetEntity="Site", inversedBy="sorties")
      */
     private $site;
 
@@ -206,6 +212,38 @@ class Sortie
     {
         $this->organisateur = $organisateur;
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
+    /**
+     * @param mixed $participants
+     */
+    public function setParticipants($participants): void
+    {
+        $this->participants = $participants;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @param mixed $site
+     */
+    public function setSite($site): void
+    {
+        $this->site = $site;
     }
 
 }

@@ -34,7 +34,7 @@ class ParticipantType extends AbstractType
                 "choice_label"=>"nom",
                 "class"=>Site::class,
             ])
-            ->add('imageFile',FileType::class,[])
+            ->add('imageFile',FileType::class,["required"=>false])
         ;
     }
 

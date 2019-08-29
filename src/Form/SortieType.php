@@ -19,37 +19,30 @@ class SortieType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class,[
-            "error_bubbling" => true,
             //  "trim" => true,
             "label" => "Nom",
             ])
             ->add('datedebut', DateTimeType::class, [
-                "error_bubbling" => true,
                 //  "trim" => true,
                 "label" => "Date",
             ])
             ->add('duree', NumberType::class,[
-                "error_bubbling" => true,
                 //  "trim" => true,
                 "label" => "Durée prévue",
                 ])
             ->add('datecloture', DateTimeType::class, [
-                "error_bubbling" => true,
                 //  "trim" => true,
                 "label" => "Date limite d'inscription",
             ])
             ->add('datedebut', DateTimeType::class, [
-                "error_bubbling" => true,
                 //  "trim" => true,
                 "label" => "Date",
             ])
             ->add('nbinscriptionsmax', NumberType::class,[
-                "error_bubbling" => true,
                 //  "trim" => true,
                 "label" => "Nombre de places",
                 ])
             ->add('descriptioninfos', TextareaType::class,[
-            "error_bubbling" => true,
             //  "trim" => true,
             "label" => "Description",
             ])
