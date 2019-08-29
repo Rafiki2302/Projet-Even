@@ -67,12 +67,12 @@ class Sortie
     private $participants;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sortie")
+     * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sorties")
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Etat", inversedBy= "sortie")
+     * @ORM\ManyToOne (targetEntity = "Etat", inversedBy= "sorties")
      */
     private $etat;
 

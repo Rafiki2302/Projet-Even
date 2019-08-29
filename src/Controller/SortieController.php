@@ -46,7 +46,6 @@ class SortieController extends Controller
 
             return $this->redirectToRoute('sortie_index');
         }
-
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form->createView(),

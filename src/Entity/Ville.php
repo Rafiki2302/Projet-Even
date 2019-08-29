@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VilleRepository")
@@ -20,11 +21,22 @@ class Ville
 
     /**
      * @ORM\Column(type="string", length=30)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=30,maxMessage="Le nom de la ville ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Range(
+     *     min = 1000,
+     *      max = 98890,
+     *      minMessage = "Un code postal ne peut pas être inférieur à {{ limit }}",
+     *      maxMessage = "Un code postal ne peut pas être supérieur à {{ limit }}"
+     * )
      */
     private $codePostal;
 
