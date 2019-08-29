@@ -57,7 +57,7 @@ class ParticipantController extends Controller
                         $entityManager->persist($participant);
                         $entityManager->flush();
 
-                        return $this->redirectToRoute('participant_index');
+                        return $this->redirectToRoute('sortie_index');
                     }
                     catch (UniqueConstraintViolationException $exception){
                         $this->addFlash("erreurUnique","Le pseudo ou l'email est déjà utilisé par un autre participant");

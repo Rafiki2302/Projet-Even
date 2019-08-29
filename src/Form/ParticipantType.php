@@ -33,8 +33,9 @@ class ParticipantType extends AbstractType
             ->add('site',EntityType::class,[
                 "choice_label"=>"nom",
                 "class"=>Site::class,
+                "label"=>"Site de l'ENI auquel vous êtes rattaché :"
             ])
-            ->add('imageFile',FileType::class,["required"=>false])
+            ->add('imageFile',FileType::class,["required"=>false,"label"=>"Image de profil : "])
         ;
     }
 

@@ -21,6 +21,7 @@ class SortieType extends AbstractType
             ->add('nom', TextType::class,[
             //  "trim" => true,
             "label" => "Nom",
+                "required"=>false,
             ])
             ->add('datedebut', DateTimeType::class, [
                 //  "trim" => true,
@@ -29,6 +30,7 @@ class SortieType extends AbstractType
             ->add('duree', NumberType::class,[
                 //  "trim" => true,
                 "label" => "Durée prévue",
+                "required"=>false,
                 ])
             ->add('datecloture', DateTimeType::class, [
                 //  "trim" => true,
@@ -37,14 +39,17 @@ class SortieType extends AbstractType
             ->add('datedebut', DateTimeType::class, [
                 //  "trim" => true,
                 "label" => "Date",
+                "required"=>false,
             ])
             ->add('nbinscriptionsmax', NumberType::class,[
                 //  "trim" => true,
                 "label" => "Nombre de places",
+                "required"=>false,
                 ])
             ->add('descriptioninfos', TextareaType::class,[
             //  "trim" => true,
             "label" => "Description",
+                "required"=>false,
             ])
 
             ->add('lieu',EntityType::class,[

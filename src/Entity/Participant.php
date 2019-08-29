@@ -88,7 +88,7 @@ class Participant implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $urlImg;
 
@@ -102,12 +102,15 @@ class Participant implements UserInterface
      *     maxHeight = 3000,
      *     maxWidthMessage="La taille de l'image ne peut pas dépasser {{ max_width }} x 3000 pixels",
      *     maxHeightMessage="La taille de l'image ne peut pas dépasser 3000 x {{ max_height }} pixels",
-     *     maxSize="2M",
-     *     maxSizeMessage="Le poids de l'image ne peut dépasser 2 Mo",
-     *     mimeTypes={"image/gif","image/jpeg","image/png"},
-     *     mimeTypesMessage="Format d'image invalide, insérez une image de format {{ types }}",
-     *     allowLandscape=false,
-     *     allowLandscapeMessage="Seules les images au format portrait son acceptées"
+     *     maxSize="1999k",
+     *     maxSizeMessage="L'image ne peut pas dépasser 2Mo",
+     *     mimeTypes = {
+     *          "image/png",
+     *          "image/jpeg",
+     *          "image/jpg",
+     *          "image/gif",
+     *      },
+     *     mimeTypesMessage="Format d'image invalide, insérez une image de format jpeg, jpg, gif ou png",
      * )
      */
     private $imageFile;
@@ -132,7 +135,7 @@ class Participant implements UserInterface
     private $listSortieOrg;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Sortie", inversedBy="participants")
+     * @ORM\ManyToMany(targetEntity="Sortie", mappedBy="participants")
      */
     private $listSortiesInsc;
 
