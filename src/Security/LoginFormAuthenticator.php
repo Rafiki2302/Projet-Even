@@ -68,7 +68,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Pseudo could not be found.');
+            throw new CustomUserMessageAuthenticationException('Le pseudo ou le mot de passe est invalide.');
         }
 
         return $user;
@@ -76,6 +76,12 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if($this->passwordEncoder->isPasswordValid($user, $credentials['password'])){
+            return true;
+        }
+        else{
+            throw new CustomUserMessageAuthenticationException('Le pseudo ou le mot de passe est invalide.');
+        }
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 

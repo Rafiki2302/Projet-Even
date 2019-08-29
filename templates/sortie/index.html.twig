@@ -11,7 +11,7 @@
                 <th>Nom</th>
                 <th>Date</th>
                 <th>Duree(min)</th>
-                <th>s'inscrire av le</th>
+                <th>Inscription av le</th>
                 <th>Nombre de participants</th>
                 <th>Description</th>
                 <th>Organisateur</th>
@@ -24,9 +24,9 @@
         {% for sortie in sorties %}
             <tr>
                 <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.datedebut ? sortie.datedebut|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sortie.datedebut ? sortie.datedebut|date('d/m/Y H:i:s') : '' }}</td>
                 <td>{{ sortie.duree }}</td>
-                <td>{{ sortie.datecloture ? sortie.datecloture|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sortie.datecloture ? sortie.datecloture|date('d/m/Y H:i:s') : '' }}</td>
                 <td>{{ sortie.nbinscriptionsmax }}</td>
                 <td>{{ sortie.descriptioninfos }}</td>
 

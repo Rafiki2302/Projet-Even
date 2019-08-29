@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SortieRepository")
  */
@@ -25,7 +26,9 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank(message="le champ date début ne peut pas être vide")
+     * @Assert\DateTime()
+     * @var string A "Y-m-d" formatted value
+     * @Assert\GreaterThan("today")
      */
     private $datedebut;
 
@@ -36,7 +39,9 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank(message="le champ date de fin ne peut pas être vide")
+     * @Assert\DateTime()
+     * @var string A "Y-m-d" formatted value
+     * @Assert\GreaterThan("today")
      */
     private $datecloture;
 
