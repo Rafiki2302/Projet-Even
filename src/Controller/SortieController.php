@@ -20,9 +20,6 @@ class SortieController extends Controller
      */
     public function index(SortieRepository $sortieRepository): Response
     {
-        $sorties = $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),]);
-
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sortieRepository->findAll(),
         ]);
@@ -38,11 +35,14 @@ class SortieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setOrganisateur($this->getUser());
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+            if ($this->getUser()) {
+
+                $sortie->setOrganisateur($this->getUser());
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+            }
 
             return $this->redirectToRoute('sortie_index');
         }
