@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LieuRepository")
@@ -19,26 +20,47 @@ class Lieu
 
     /**
      * @ORM\Column(type="string", length=50)
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli")
+     * @Assert\Length(max=50,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
+     *
+     * @Assert\Length(max=100,maxMessage="La rue ne peut pas faire plus de {{ limit }} caractères")
      */
     private $rue;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     *
+     * @Assert\LessThanOrEqual(90,message="La latitude ne peut pas être supérieure à {{ compared_value }} degrés")
+     * @Assert\Range(
+     *     min = -90,
+     *      max = 90,
+     *      minMessage = "La latitude ne pas être inférieure à {{ limit }}",
+     *     maxMessage = "La latitude ne pas être supérieure à {{ limit }}"
+     * )
+     *
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     *
+     * @Assert\Range(
+     *     min = -180,
+     *      max = 180,
+     *      minMessage = "La longitude ne pas être inférieure à {{ limit }}",
+     *      maxMessage = "La longitude ne pas être supérieure à {{ limit }}"
+     * )
      */
     private $longitude;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Ville", inversedBy= "lieu")
+     * @ORM\ManyToOne (targetEntity = "Ville", inversedBy= "lieus")
      */
     private $ville;
 
@@ -63,7 +85,7 @@ class Lieu
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
 
@@ -106,12 +128,12 @@ class Lieu
         return $this;
     }
 
-    public function getVille(): ?string
+    public function getVille(): ?Ville
     {
         return $this->ville;
     }
 
-    public function setVille(string $ville): self
+    public function setVille(?Ville $ville): self
     {
         $this->ville = $ville;
 

@@ -1,4 +1,14 @@
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.datedebut) }}
+    {{ form_row(form.datecloture) }}
+    {{ form_row(form.nbinscriptionsmax) }}
+    {{ form_row(form.duree) }}
+    {{ form_row(form.descriptioninfos) }}
+    <p>Ville organisatrice : {{ app.user.site.nom }}</p>
+    {{ form_row(form.lieu) }}
+
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
