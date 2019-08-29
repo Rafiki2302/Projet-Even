@@ -21,6 +21,7 @@ class Sortie
     /**
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="le champ nom ne peut pas être vide")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
@@ -57,24 +58,29 @@ class Sortie
     private $descriptioninfos;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Participant", inversedBy= "sortie")
+     * @ORM\ManyToOne (targetEntity = "Participant", inversedBy= "listSortieOrg")
      */
     private $organisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Participant", inversedBy="sorties")
+     * @ORM\ManyToMany(targetEntity="Participant", inversedBy="listSortieOrg")
      */
     private $participants;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sortie")
+     * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sorties")
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Etat", inversedBy= "sortie")
+     * @ORM\ManyToOne (targetEntity = "Etat", inversedBy= "sorties")
      */
     private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Site", inversedBy="sortie")
+     */
+    private $site;
 
     public function getId(): ?int
     {

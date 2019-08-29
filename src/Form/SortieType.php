@@ -2,10 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,13 +48,16 @@ class SortieType extends AbstractType
                 //  "trim" => true,
                 "label" => "Nombre de places",
                 ])
-            ->add('descriptioninfos', TextType::class,[
+            ->add('descriptioninfos', TextareaType::class,[
             "error_bubbling" => true,
             //  "trim" => true,
             "label" => "Description",
             ])
 
-            ->add('lieu')
+            ->add('lieu',EntityType::class,[
+                "class"=>Lieu::class,
+                "choice_label"=>'nom',
+            ])
         ;
     }
 

@@ -1,4 +1,19 @@
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_row(form.nom) }}
+    {{ form_row(form.datedebut) }}
+    {{ form_row(form.datecloture) }}
+    {{ form_row(form.nbinscriptionsmax) }}
+    {{ form_row(form.duree) }}
+    {{ form_row(form.descriptioninfos) }}
+    <p>Ville organisatrice : {{ app.user.site.nom }}</p>
+    {{ form_row(form.lieu) }}
+    <a href="{{ path('lieu_new') }}">Créer un nouveau lieu de sortie</a>
+    <div>
+        <button class="btn btn-primary" name="enregistrer">{{ button_label|default('Enregistrer') }}</button>
+        <button class="btn btn-success" name="publier">{{ button_label|default('Publier la sortie') }}</button>
+        <a href="{{ path('sortie_index') }}" class="btn btn-secondary">Annuler</a>
+    </div>
+
 {{ form_end(form) }}
+
