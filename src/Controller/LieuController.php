@@ -39,7 +39,7 @@ class LieuController extends Controller
             $entityManager->persist($lieu);
             $entityManager->flush();
 
-            return $this->redirectToRoute('lieu_index');
+            return $this->redirectToRoute('sortie_new');
         }
 
         return $this->render('lieu/new.html.twig', [

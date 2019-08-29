@@ -21,6 +21,7 @@ class Sortie
     /**
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="le champ nom ne peut pas être vide")
+     * @Assert\Length(max=30,maxMessage="Le nom ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 

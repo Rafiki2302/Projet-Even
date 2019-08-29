@@ -8,7 +8,12 @@
     {{ form_row(form.descriptioninfos) }}
     <p>Ville organisatrice : {{ app.user.site.nom }}</p>
     {{ form_row(form.lieu) }}
+    <a href="{{ path('lieu_new') }}">Créer un nouveau lieu de sortie</a>
+    <div>
+        <button class="btn btn-primary" name="enregistrer">{{ button_label|default('Enregistrer') }}</button>
+        <button class="btn btn-success" name="publier">{{ button_label|default('Publier la sortie') }}</button>
+        <a href="{{ path('sortie_index') }}" class="btn btn-secondary">Annuler</a>
+    </div>
 
-    <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
 

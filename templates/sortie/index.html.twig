@@ -31,7 +31,7 @@
                 <td>{{ sortie.descriptioninfos }}</td>
 
                 <td>{{ sortie.organisateur.getNom() }}</td>
-                <td>{{ sortie.lieu }}</td>
+                <td>{{ sortie.lieu.nom }}</td>
                 <td>{{ sortie.etat }}</td>
                 <td>
                     <a href="{{ path('sortie_show', {'id': sortie.id}) }}">show</a>
