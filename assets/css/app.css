@@ -1,3 +1,60 @@
 body {
-    background-color: lightgray;
+    background-color: #FFFFFF;
 }
+
+/* ######  COMMON  ###### */
+.navbar-custom-color {
+    background-color: #075E80;
+}
+
+/* ######  LOGIN  ###### */
+.str-login-block {
+    width: 450px;
+    min-height: 250px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 250px;
+    padding: 40px;
+    border: 3px solid #A9C0C9;
+    border-radius: 1px;
+    box-shadow: 5px 3px 8px lightgray;
+}
+
+.str-login-input{
+    margin-bottom: 30px;
+}
+
+.str-login-input span{
+    display: inline-flex;
+    height: 38px;
+    padding: 8px 0;
+    color: #075E80;
+}
+
+.str-login-input input{
+    max-width: 200px;
+    display: inline-flex;
+    float: right;
+}
+
+.str-forgot-password a{
+    color: #075E80;
+    text-decoration: underline;
+}
+
+.checkbox label{
+    color: #075E80;
+}
+
+.str-row .col:first-child{
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+.str-row button{
+    width: 100%;
+    background-color: #075E80;
+    border-color: #075E80;
+}
+/* ######    ###### */
+
