@@ -32,6 +32,27 @@ class Site
     private $listUsers;
 
     /**
+     *@ORM\OneToMany(targetEntity="Sortie", mappedBy="site")
+     */
+    private $sorties;
+
+    /**
+     * @return mixed
+     */
+    public function getSorties()
+    {
+        return $this->sorties;
+    }
+
+    /**
+     * @param mixed $sorties
+     */
+    public function setSorties($sorties): void
+    {
+        $this->sorties = $sorties;
+    }
+
+    /**
      * Site constructor.
      */
     public function __construct()

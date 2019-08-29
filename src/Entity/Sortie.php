@@ -57,12 +57,12 @@ class Sortie
     private $descriptioninfos;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Participant", inversedBy= "sortie")
+     * @ORM\ManyToOne (targetEntity = "Participant", inversedBy= "listSortieOrg")
      */
     private $organisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Participant", inversedBy="sorties")
+     * @ORM\ManyToMany(targetEntity="Participant", inversedBy="listSortieOrg")
      */
     private $participants;
 
@@ -75,6 +75,11 @@ class Sortie
      * @ORM\ManyToOne (targetEntity = "Etat", inversedBy= "sortie")
      */
     private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Site", inversedBy="sortie")
+     */
+    private $site;
 
     public function getId(): ?int
     {

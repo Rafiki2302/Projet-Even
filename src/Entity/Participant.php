@@ -127,7 +127,7 @@ class Participant implements UserInterface
     private $site;
 
     /**
-     * @ORM\OneToMany (targetEntity = "Sortie", mappedBy= "participant")
+     * @ORM\OneToMany (targetEntity = "Sortie", mappedBy= "organisateur")
      */
     private $listSortieOrg;
 
