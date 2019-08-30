@@ -3,36 +3,47 @@
 {% block title %}Lieu{% endblock %}
 
 {% block body %}
-    <h1>Lieu</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ lieu.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ lieu.nom }}</td>
-            </tr>
-            <tr>
-                <th>Rue</th>
-                <td>{{ lieu.rue }}</td>
-            </tr>
-            <tr>
-                <th>Latitude</th>
-                <td>{{ lieu.latitude }}</td>
-            </tr>
-            <tr>
-                <th>Longitude</th>
-                <td>{{ lieu.longitude }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="str-main-container">
+        <h1>Lieu</h1>
 
-    <a href="{{ path('lieu_index') }}">back to list</a>
+        <table class="table table-striped str-table-show">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ lieu.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ lieu.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Rue</th>
+                    <td>{{ lieu.rue }}</td>
+                </tr>
+                <tr>
+                    <th>Latitude</th>
+                    <td>{{ lieu.latitude }}</td>
+                </tr>
+                <tr>
+                    <th>Longitude</th>
+                    <td>{{ lieu.longitude }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <a href="{{ path('lieu_edit', {'id': lieu.id}) }}">edit</a>
+        <div class="str-button-link str-container-button">
+            <div class="str-a-position">
+                <a href="{{ path('lieu_index') }}"><i class="fa fa-reply"></i> Retour à la liste</a>
+            </div>
 
-    {{ include('lieu/_delete_form.html.twig') }}
+            <div class="str-a-position">
+                <a href="{{ path('lieu_edit', {'id': lieu.id}) }}"><i class="fa fa-pencil"></i> Modifier</a>
+            </div>
+
+            <div>
+                {{ include('lieu/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

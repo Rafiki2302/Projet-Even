@@ -15,7 +15,7 @@ h1 {
 }
 
 .str-main-container {
-    width: 80%;
+    width: 75%;
     margin: auto;
 }
 
@@ -25,14 +25,27 @@ h1 {
 
 .str-button-link {
     margin-top: 40px;
-    text-align: right;
 }
 
-.str-button-link a{
+.str-button-link a, .str-button-link button{
+    color: #007bff;
     margin: auto;
-    padding: 7px 15px;
     border: 1px solid #0056B3;
     border-radius: 4px;
+}
+
+.str-button-link a {
+    padding: 8px 15px;
+}
+
+.str-button-link button {
+    padding: 7px 15px;
+}
+
+/* ######  COMMON SHOW  ######## */
+.str-table-show {
+    margin: 30px auto;
+    max-width: 400px;
 }
 
 /* ######  LOGIN  ###### */
@@ -84,5 +97,23 @@ h1 {
     background-color: #075E80;
     border-color: #075E80;
 }
-/* ######  Lieu & Site  ###### */
 
+/* ######  Lieu & Site & Villes  ###### */
+
+.str-button-align-right {
+    text-align: right;
+}
+
+.str-container-button {
+    text-align: center;
+}
+
+.str-container-button div {
+    display: inline-block;
+    margin: 0 8px;
+}
+
+.str-a-position a {
+    position: relative;
+    top: 2px;
+}
