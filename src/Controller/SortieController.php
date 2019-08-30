@@ -23,15 +23,21 @@ use Symfony\Component\Routing\Router;
 class SortieController extends Controller
 {
     /**
-     * @Route("/", name="sortie_index", methods={"GET"})
+     * @Route("/", name="sortie_index", methods={"GET","POST"})
      */
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
+        $sorties = new Sortie();
+        $user = $this->getUser();
+
         $formRecherche = $this->createForm(RechercheType::class);
         $formRecherche->handleRequest($request);
 
         if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
-
+            $sorties = $sortieRepository->findBySeveralFields($formRecherche->get('site')->getData(),
+                $formRecherche->get('sortiesOrga')->getData(),$user);
+            return $this->render("sortie/index.html.twig",
+                ["form" => $formRecherche->createView(), "sorties" => $sorties]);
         }
         $sorties = $sortieRepository->findOrder();
 

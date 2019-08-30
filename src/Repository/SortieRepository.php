@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Participant;
+use App\Entity\Site;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use PhpParser\Node\Expr\Cast\Array_;
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,12 +30,23 @@ class SortieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->orderBy('s.site', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
 
+    public function findBySeveralFields( Site $site, $orga, Participant $user): ?array
+    {
+
+        //$qbd = $this->createQueryBuilder('s')
+
+        $qb = $this->createQueryBuilder('s')
+             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
+             ->setMaxResults(10)
+             ->setParameter('site', $site->getNom());
+
+        return $qb->getQuery()->getResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?Sortie
@@ -45,4 +59,5 @@ class SortieRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }
