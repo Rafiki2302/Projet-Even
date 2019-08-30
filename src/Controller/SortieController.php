@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\RechercheType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,11 +22,18 @@ class SortieController extends Controller
     /**
      * @Route("/", name="sortie_index", methods={"GET"})
      */
-    public function index(SortieRepository $sortieRepository): Response
+    public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-        return $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
-        ]);
+        $formRecherche = $this->createForm(RechercheType::class);
+        $formRecherche->handleRequest($request);
+
+        if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
+
+        }
+        $sorties = $sortieRepository->findOrder();
+
+        return $this->render("sortie/index.html.twig",
+            ["form" => $formRecherche->createView(), "sorties" => $sorties]);
     }
 
     /**
@@ -39,6 +50,8 @@ class SortieController extends Controller
             if ($this->getUser()) {
 
                 $sortie->setOrganisateur($this->getUser());
+                $participant = $this->getUser();
+                $sortie->setSite($participant->getSite());
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($sortie);
                 $entityManager->flush();
@@ -87,7 +100,7 @@ class SortieController extends Controller
      */
     public function delete(Request $request, Sortie $sortie): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($sortie);
             $entityManager->flush();
@@ -96,3 +109,5 @@ class SortieController extends Controller
         return $this->redirectToRoute('sortie_index');
     }
 }
+
+
