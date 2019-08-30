@@ -20,10 +20,10 @@ class Ville
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=80)
      *
      * @Assert\NotBlank(message="Le champ doit être rempli")
-     * @Assert\Length(max=30,maxMessage="Le nom de la ville ne peut pas faire plus de {{ limit }} caractères")
+     * @Assert\Length(max=80,maxMessage="Le nom de la ville ne peut pas faire plus de {{ limit }} caractères")
      */
     private $nom;
 
@@ -60,7 +60,7 @@ class Ville
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
 

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler Sortie{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Annuler une sortie</h1>
+    <div class="container">
+        <div class="row">
+            <table class="table col-lg-12">
+                <tbody>
+                <tr>
+                    <th>Nom de la sortie : </th>
+                    <td>{{ sortie.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Date de la sortie : </th>
+                    <td>{{ sortie.datedebut ? sortie.datedebut|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Ville organisatrice : </th>
+                    <td>{{ sortie.site }}</td>
+                </tr>
+                {{ include('sortie/_aff_lieu_ds_sortie_html_twig')}}
+                <tr>
+                    <th>Lieu : </th>
+                    <td>{{ sortie.lieu.nom }} {{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Motif : </th>
+                    <td><input type="textarea" name="motifAnnul"></td>
+                </tr>
+                </tbody>
+            </table>
+            {{ form_start(form) }}
+            {{ form_end(form) }}
+            <a href="#">Retour</a>
+        </div>
+    </div>
+{% endblock %}
