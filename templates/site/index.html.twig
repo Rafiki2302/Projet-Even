@@ -3,33 +3,38 @@
 {% block title %}Site index{% endblock %}
 
 {% block body %}
-    <h1>Site index</h1>
+    <div class="str-main-container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for site in sites %}
-            <tr>
-                <td>{{ site.id }}</td>
-                <td>{{ site.nom }}</td>
-                <td>
-                    <a href="{{ path('site_show', {'id': site.id}) }}">show</a>
-                    <a href="{{ path('site_edit', {'id': site.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <h1>Site index</h1>
 
-    <a href="{{ path('site_new') }}">Create new</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for site in sites %}
+                <tr>
+                    <td>{{ site.id }}</td>
+                    <td>{{ site.nom }}</td>
+                    <td>
+                        <a href="{{ path('site_show', {'id': site.id}) }}" title="voir"><i class="fa fa-eye"></i></a>
+                        <a href="{{ path('site_edit', {'id': site.id}) }}" title="modifier"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="str-button-link">
+            <a href="{{ path('site_new') }}"><i class="fa fa-plus"></i> Ajouter nouveau site</a>
+        </div>
+    </div>
 {% endblock %}

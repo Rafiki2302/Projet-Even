@@ -3,39 +3,45 @@
 {% block title %}Lieu index{% endblock %}
 
 {% block body %}
-    <h1>Lieu index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Rue</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for lieu in lieus %}
-            <tr>
-                <td>{{ lieu.id }}</td>
-                <td>{{ lieu.nom }}</td>
-                <td>{{ lieu.rue }}</td>
-                <td>{{ lieu.latitude }}</td>
-                <td>{{ lieu.longitude }}</td>
-                <td>
-                    <a href="{{ path('lieu_show', {'id': lieu.id}) }}">show</a>
-                    <a href="{{ path('lieu_edit', {'id': lieu.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="str-main-container">
 
-    <a href="{{ path('lieu_new') }}">Create new</a>
+        <h1>Lieu index</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Rue</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Longitude</th>
+                    <th scope="col">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for lieu in lieus %}
+                <tr>
+                    <th scope="row">{{ lieu.id }}</th>
+                    <td>{{ lieu.nom }}</td>
+                    <td>{{ lieu.rue }}</td>
+                    <td>{{ lieu.latitude }}</td>
+                    <td>{{ lieu.longitude }}</td>
+                    <td>
+                        <a href="{{ path('lieu_show', {'id': lieu.id}) }}" title="voir"><i class="fa fa-eye"></i></a>
+                        <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" title="modifier"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="str-button-link">
+            <a href="{{ path('lieu_new') }}"><i class="fa fa-plus"></i> Ajouter nouveau Lieu</a>
+        </div>
+    </div>
 {% endblock %}

@@ -3,35 +3,40 @@
 {% block title %}Ville index{% endblock %}
 
 {% block body %}
-    <h1>Ville index</h1>
+    <div class="str-main-container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>CodePostal</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ville in villes %}
-            <tr>
-                <td>{{ ville.id }}</td>
-                <td>{{ ville.nom }}</td>
-                <td>{{ ville.codePostal }}</td>
-                <td>
-                    <a href="{{ path('ville_show', {'id': ville.id}) }}">show</a>
-                    <a href="{{ path('ville_edit', {'id': ville.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <h1>Ville index</h1>
 
-    <a href="{{ path('ville_new') }}">Create new</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nom</th>
+                <th scope="col">CodePostal</th>
+                <th scope="col">actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ville in villes %}
+                <tr>
+                    <th scope="row">{{ ville.id }}</th>
+                    <td>{{ ville.nom }}</td>
+                    <td>{{ ville.codePostal }}</td>
+                    <td>
+                        <a href="{{ path('ville_show', {'id': ville.id}) }}" title="voir"><i class="fa fa-eye"></i></a>
+                        <a href="{{ path('ville_edit', {'id': ville.id}) }}" title="modifier"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="str-button-link">
+            <a href="{{ path('ville_new') }}"><i class="fa fa-plus"></i> Ajouter nouvelle ville</a>
+        </div>
+    </div>
 {% endblock %}
