@@ -58,10 +58,19 @@ class Sortie
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
      *
-     * @Assert\NotBlank(message="le champ nom ne peut pas être vide")
      * @Assert\Length(max=500,maxMessage="La description ne peut pas faire plus de {{ limit }} caractères")
      */
     private $descriptioninfos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=500, nullable=true)
+     *
+     * @Assert\Length(max=500,maxMessage="Le motif ne peut pas faire plus de {{ limit }} caractères")
+
+     */
+    private $motifAnnul;
 
     /**
      * @ORM\ManyToOne (targetEntity = "Participant", inversedBy= "listSortieOrg")
@@ -245,5 +254,22 @@ class Sortie
     {
         $this->site = $site;
     }
+
+    /**
+     * @return string
+     */
+    public function getMotifAnnul(): string
+    {
+        return $this->motifAnnul;
+    }
+
+    /**
+     * @param string $motifAnnul
+     */
+    public function setMotifAnnul(string $motifAnnul): void
+    {
+        $this->motifAnnul = $motifAnnul;
+    }
+
 
 }

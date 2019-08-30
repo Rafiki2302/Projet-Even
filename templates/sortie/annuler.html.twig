@@ -18,16 +18,12 @@
                 </tr>
                 <tr>
                     <th>Ville organisatrice : </th>
-                    <td>{{ sortie.site }}</td>
+                    <td>{{ sortie.site.nom }}</td>
                 </tr>
                 {{ include('sortie/_aff_lieu_ds_sortie_html_twig')}}
                 <tr>
                     <th>Lieu : </th>
                     <td>{{ sortie.lieu.nom }} {{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</td>
-                </tr>
-                <tr>
-                    <th>Motif : </th>
-                    <td><input type="textarea" name="motifAnnul"></td>
                 </tr>
                 </tbody>
             </table>
