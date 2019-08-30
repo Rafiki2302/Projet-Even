@@ -14,7 +14,10 @@ class AnnulSortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('motif',TextareaType::class,["required"=>false,"trim"=>true,"label"=>"Motif :","mapped"=>false])
+        $builder->add('motif',TextareaType::class,[
+            "required"=>false,
+            "trim"=>true,"label"=>"Motif :",
+            "mapped"=>false])
         ->add('submit',SubmitType::class,["label"=>"Enregistrer"])
         ;
 
