@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Form\LieuType;
 use App\Repository\LieuRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,6 +33,12 @@ class LieuController extends Controller
     public function new(Request $request): Response
     {
         $lieu = new Lieu();
+        /*
+        $test = ["a"=>1,"b"=>"test"];
+        dump($test);
+        dump(json_encode($test));
+        exit();
+        */
         $form = $this->createForm(LieuType::class, $lieu);
         $form->handleRequest($request);
 
@@ -90,5 +98,23 @@ class LieuController extends Controller
         }
 
         return $this->redirectToRoute('lieu_index');
+    }
+
+    /**
+     * @Route("/infos", name="lieu_infos")
+     */
+    public function infoLieu(Request $request, EntityManagerInterface $entityManager){
+
+        $idLieu = $request->get('id');
+
+        $lieu = $entityManager->getRepository("App:Lieu")->find($idLieu);
+        $tablieu = [
+            'rue' => $lieu->getRue(),
+            'ville'=>$lieu->getVille()->getNom(),
+            'codeP'=>$lieu->getVille()->getCodePostal(),
+            'latitude'=>$lieu->getLatitude(),
+            'longitude'=>$lieu->getLongitude(),
+        ];
+        return new JsonResponse(["data" => json_encode($tablieu)]);
     }
 }

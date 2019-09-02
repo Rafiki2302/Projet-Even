@@ -83,7 +83,9 @@ class Sortie
     private $participants;
 
     /**
-     * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sorties")
+     * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sorties", cascade={"persist"})
+     *
+     * @Assert\Valid()
      */
     private $lieu;
 

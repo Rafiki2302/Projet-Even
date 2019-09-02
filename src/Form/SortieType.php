@@ -52,10 +52,13 @@ class SortieType extends AbstractType
             "label" => "Description",
                 "required"=>false,
             ])
-
-            ->add('lieu',EntityType::class,[
+            ->add("lieu",EntityType::class,[
+                "choice_label"=>"nom",
                 "class"=>Lieu::class,
-                "choice_label"=>'nom',
+                "label"=>"Lieu : "
+            ])
+            ->add('nouveauLieu',LieuType::class,[
+                "mapped"=>false,
             ])
             ->add('enreg',SubmitType::class,["label"=>'Enregistrer'])
             ->add('publi',SubmitType::class,["label"=>"Publier la sortie"])

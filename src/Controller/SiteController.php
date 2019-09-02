@@ -35,6 +35,8 @@ class SiteController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->getData());
+            exit();
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($site);
             $entityManager->flush();
