@@ -3,9 +3,14 @@
 {% block title %}New Lieu{% endblock %}
 
 {% block body %}
-    <h1>Create new Lieu</h1>
+    <div class="str-main-container">
+        <h1>Create new Lieu</h1>
 
-    {{ include('lieu/_form.html.twig') }}
-
-    <a href="{{ path('lieu_index') }}">back to list</a>
+        {{ include('lieu/_form.html.twig') }}
+        <div class="str-button-link str-container-button">
+            <div>
+                <a href="{{ path('lieu_index') }}"><i class="fa fa-reply"></i> Retour à la liste</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

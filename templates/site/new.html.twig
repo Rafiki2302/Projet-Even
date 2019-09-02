@@ -3,9 +3,15 @@
 {% block title %}New Site{% endblock %}
 
 {% block body %}
-    <h1>Create new Site</h1>
+    <div class="str-main-container">
+        <h1>Create new Site</h1>
 
-    {{ include('site/_form.html.twig') }}
+        {{ include('site/_form.html.twig') }}
 
-    <a href="{{ path('site_index') }}">back to list</a>
+        <div class="str-button-link str-container-button">
+            <div>
+                <a href="{{ path('site_index') }}"><i class="fa fa-reply"></i> Retour à la liste</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

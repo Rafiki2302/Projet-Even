@@ -3,9 +3,15 @@
 {% block title %}New Ville{% endblock %}
 
 {% block body %}
-    <h1>Create new Ville</h1>
 
-    {{ include('ville/_form.html.twig') }}
+    <div class="str-main-container">
+        <h1>Create new Ville</h1>
 
-    <a href="{{ path('ville_index') }}">back to list</a>
+        {{ include('ville/_form.html.twig') }}
+        <div class="str-button-link str-container-button">
+            <div>
+                <a href="{{ path('ville_index') }}"><i class="fa fa-reply"></i> Retour à la liste</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
