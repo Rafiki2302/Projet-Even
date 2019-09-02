@@ -51,7 +51,7 @@ class Participant implements UserInterface
      * @ORM\Column(type="string", length=10, nullable=true)
      *
      * @Assert\NotBlank(message="Le champ doit être rempli")
-     * @Assert\Regex("#^0[1-9]{9}$#", message="Numéro de téléphone incorrect, ressaisissez")
+     * @Assert\Regex("#^0[1-9][0-9]{8}$#", message="Numéro de téléphone incorrect, ressaisissez")
      */
     private $telephone;
 
