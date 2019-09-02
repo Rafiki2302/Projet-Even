@@ -8,12 +8,14 @@
     {{ form_row(form.descriptioninfos) }}
     <p>Ville organisatrice : {{ app.user.site.nom }}</p>
     {{ form_row(form.lieu) }}
+    <p id="rue"></p>
+
     <!-- Button activante la fenêtre modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
         Créer un nouveau lieu de sortie
     </button>
     <!-- Modal -->
-    <p id="rue">Rue : </p>
+
     {{ form_row(form.enreg) }}
     {{ form_row(form.publi) }}
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
