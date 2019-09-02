@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Form\LieuType;
 use App\Repository\LieuRepository;
+use App\Service\LieuService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,36 +31,72 @@ class LieuController extends Controller
     /**
      * @Route("/new", name="lieu_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, LieuService $lieuService): Response
     {
         $lieu = new Lieu();
-        /*
-        $test = ["a"=>1,"b"=>"test"];
-        dump($test);
-        dump(json_encode($test));
-        exit();
-        */
+
         $form = $this->createForm(LieuType::class, $lieu);
         $form->handleRequest($request);
 
-        $lieuJS = $request->get('lieu');
 
-        $lieu->setNom($lieuJS['nom']);
-        $lieu->setRue($lieuJS['rue']);
-        if ($lieuJS['latitude'] !== ''){
-            $lieu->setLatitude(intval($lieuJS['latitude']));
+        /*
+         * Ne pas effacer, tentative de simplifier en passant par le form symfony
+        if ($request->isMethod('POST')){
+            $form->submit($request->request->get($form->getName()));
+            if ($form->isSubmitted()){
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+
+                $infosLieu = ["idLieu"=>$lieu->getId(),"nomLieu"=>$lieu->getNom()];
+
+                return new JsonResponse(["data" => json_encode($lieu)]);
+            }
+            else{
+                return new JsonResponse(["data"=>json_encode("coucou")]);
+            }
         }
-        if($lieuJS['longitude'] !== ''){
-            $lieu->setLongitude(intval($lieuJS['longitude']));
+        */
+
+        //la méthode post est réservée à la requête ajax permettant d'ajouter un lieu dans le form sortie
+        if($request->isMethod('POST')){
+            //On récupère un objet lieu construit en JS
+            $lieuJS = $request->get('lieu');
+            //On reconstruit une entité lieu dans symfony
+            $lieu->setNom($lieuJS['nom']);
+            $lieu->setRue($lieuJS['rue']);
+            if ($lieuJS['latitude'] !== ''){
+                $lieu->setLatitude(intval($lieuJS['latitude']));
+            }
+            if($lieuJS['longitude'] !== ''){
+                $lieu->setLongitude(intval($lieuJS['longitude']));
+            }
+            $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));
+
+            //On checke si les données sont ok, si ko envoi d'un message d'erreur en ajax, sinon on insère le lieu en bdd
+            $message = $lieuService->validerLieu($lieu);
+            $tabInfos = ["erreur"=>$message];
+            if($message !== ""){
+                return new JsonResponse(["data" => json_encode($tabInfos)]);
+            }
+            else{
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+                $infosLieu = ["idLieu"=>$lieu->getId(),"nomLieu"=>$lieu->getNom()];
+
+                return new JsonResponse(["data" => json_encode($infosLieu)]);
+            }
+
+
         }
-        $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));
+        //comportement si appel de la page en get
+        else{
+            return $this->render('lieu/new.html.twig', [
+                'sortie' => $lieu,
+                'form' => $form->createView(),
+            ]);
+        }
 
-        $entityManager->persist($lieu);
-        $entityManager->flush();
 
-        $infosLieu = ["idLieu"=>$lieu->getId(),"nomLieu"=>$lieu->getNom()];
-
-        return new JsonResponse(["data" => json_encode($infosLieu)]);
 
         /*
         if ($form->isSubmitted() && $form->isValid()) {
@@ -123,6 +160,9 @@ class LieuController extends Controller
 
     /**
      * @Route("/infos", name="lieu_infos")
+     *
+     * Méthode permettant d'envoyer les infos principales d'un lieu à partir de son id,
+     * via une requête ajax
      */
     public function infoLieu(Request $request, EntityManagerInterface $entityManager){
 

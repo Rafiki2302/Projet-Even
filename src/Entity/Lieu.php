@@ -36,7 +36,6 @@ class Lieu
     /**
      * @ORM\Column(type="float", nullable=true)
      *
-     * @Assert\LessThanOrEqual(90,message="La latitude ne peut pas être supérieure à {{ compared_value }} degrés")
      * @Assert\Range(
      *     min = -90,
      *      max = 90,
