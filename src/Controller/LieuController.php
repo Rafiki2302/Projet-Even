@@ -30,7 +30,7 @@ class LieuController extends Controller
     /**
      * @Route("/new", name="lieu_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $lieu = new Lieu();
         /*
@@ -42,6 +42,26 @@ class LieuController extends Controller
         $form = $this->createForm(LieuType::class, $lieu);
         $form->handleRequest($request);
 
+        $lieuJS = $request->get('lieu');
+
+        $lieu->setNom($lieuJS['nom']);
+        $lieu->setRue($lieuJS['rue']);
+        if ($lieuJS['latitude'] !== ''){
+            $lieu->setLatitude(intval($lieuJS['latitude']));
+        }
+        if($lieuJS['longitude'] !== ''){
+            $lieu->setLongitude(intval($lieuJS['longitude']));
+        }
+        $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));
+
+        $entityManager->persist($lieu);
+        $entityManager->flush();
+
+        $infosLieu = ["idLieu"=>$lieu->getId(),"nomLieu"=>$lieu->getNom()];
+
+        return new JsonResponse(["data" => json_encode($infosLieu)]);
+
+        /*
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($lieu);
@@ -54,6 +74,7 @@ class LieuController extends Controller
             'lieu' => $lieu,
             'form' => $form->createView(),
         ]);
+        */
     }
 
     /**
@@ -112,8 +133,8 @@ class LieuController extends Controller
             'rue' => $lieu->getRue(),
             'ville'=>$lieu->getVille()->getNom(),
             'codeP'=>$lieu->getVille()->getCodePostal(),
-            'latitude'=>$lieu->getLatitude(),
-            'longitude'=>$lieu->getLongitude(),
+            'lat'=>$lieu->getLatitude(),
+            'lon'=>$lieu->getLongitude(),
         ];
         return new JsonResponse(["data" => json_encode($tablieu)]);
     }
