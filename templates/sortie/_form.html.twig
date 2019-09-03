@@ -20,9 +20,9 @@
     <!-- Modal -->
 
     {{ form_row(form.enreg) }}
-    {% if sortie.etat.id == 2 %}
-    {{ include('sortie/_publie_form.html.twig') }}
-    {% endif %}
+    {{ form_row(form.publi) }}
+   {#{{ include('sortie/_publie_form.html.twig') }} #}
+
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
