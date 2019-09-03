@@ -1,35 +1,36 @@
 {# COnditionnement de l'affichage du formulaire sur un col de 9 ou de 12 selon que l'on est sur une création
 ou une modif du profil. Car en modif de profil, la photo doit apparaitre sur la même col #}
 {% if app.request.attributes.get('_route') is same as('participant_new') %}
-<div class="col-lg-12 text-center str-form-align-content-right">
-    {% else %}
-    <div class="col-lg-9 text-center str-form-align-content-right">
-        {% endif %}
-        {{ form_start(form) }}
-        {% for message in app.flashes('erreurUnique') %}
-            {{ message }}
-        {% endfor %}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.prenom) }}
-        {{ form_row(form.pseudo) }}
-        {{ form_row(form.telephone) }}
-        {{ form_row(form.mail) }}
-        {% for message in app.flashes('erreur') %}
-            {{ message }}
-        {% endfor %}
-        {{ form_widget(form.motDePasseEnClair) }}
-        {{ form_row(form.site) }}
-        {{ form_row(form.imageFile) }}
+        <div class="col-lg-12 text-center str-form-align-content-right">
+{% else %}
+        <div class="col-lg-9 text-center str-form-align-content-right">
+{% endif %}
+            {{ form_start(form) }}
+                {% for message in app.flashes('erreurUnique') %}
+                    {{ message }}
+                {% endfor %}
+                {{ form_row(form.nom) }}
+                {{ form_row(form.prenom) }}
+                {{ form_row(form.pseudo) }}
+                {{ form_row(form.telephone) }}
+                {{ form_row(form.mail) }}
+                {% for message in app.flashes('erreur') %}
+                    {{ message }}
+                {% endfor %}
+                {{ form_widget(form.motDePasseEnClair) }}
+                {{ form_row(form.site) }}
+                {{ form_row(form.imageFile) }}
 
-        <div class="str-button-link str-container-button str-form-align-content-center">
-            <div>
-                <button class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{ button_label|default('Enregistrer') }}</button>
+                <div class="str-button-link str-container-button str-form-align-content-center">
+                    <div>
+                        <button class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{ button_label|default('Enregistrer') }}</button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+            <div class="str-button-link str-container-button str-form-align-content-center">
+                <div>
+                    <a href="{{ path('app_login') }}"><i class="fa fa-reply"></i> Annuler</a>
+                </div>
             </div>
-        </div>
-        {{ form_end(form) }}
-        <div class="str-button-link str-container-button str-form-align-content-center">
-            <div>
-                <a href="{{ path('app_login') }}"><i class="fa fa-reply"></i> Annuler</a>
-            </div>
-        </div>
     </div>
+

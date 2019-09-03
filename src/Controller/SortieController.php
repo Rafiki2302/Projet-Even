@@ -27,15 +27,71 @@ class SortieController extends Controller
      */
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-        $sorties = new Sortie();
+        $sorties = [];
+        $sorties2 = [];
+        $sorties3 = [];
         $user = $this->getUser();
+
 
         $formRecherche = $this->createForm(RechercheType::class);
         $formRecherche->handleRequest($request);
 
         if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
-            $sorties = $sortieRepository->findBySeveralFields($formRecherche->get('site')->getData(),
-                $formRecherche->get('sortiesOrga')->getData(),$user);
+           if(!$formRecherche->get('sortiesOrga')->getData()
+           && !$formRecherche->get('sortiesInsc')->getData()
+           && !$formRecherche->get('sortiesPasInsc')->getData()
+           && !$formRecherche->get('sortiesPass')->getData()){
+               $sorties = $sortieRepository->findBySeveralFields(
+                   $formRecherche->get('site')->getData(),
+                   $user,
+                   $formRecherche->get('nom')->getData(),
+                   $formRecherche->get('date1')->getData(),
+                   $formRecherche->get('date2')->getData()
+               );
+           }
+
+
+            if ($formRecherche->get('sortiesOrga')->getData())  {
+                $sorties = $sortieRepository->findOrga(
+                    $formRecherche->get('site')->getData(),
+                    $formRecherche->get('date1')->getData(),
+                    $formRecherche->get('date2')->getData(),
+                    $user,
+                    $formRecherche->get('nom')->getData());
+                dump($sorties);
+			}
+            if ($formRecherche->get('sortiesInsc')->getData()){
+                $sorties3 = $sortieRepository->findInsc(
+                    $formRecherche->get('site')->getData(),
+                    $formRecherche->get('date1')->getData(),
+                    $formRecherche->get('date2')->getData(),
+                    $user,
+                    $formRecherche->get('nom')->getData());
+                $sorties = array_merge ($sorties2, $sorties3);
+
+			}
+            if ($formRecherche->get('sortiesPasInsc')->getData()){
+                $sorties2 = $sortieRepository->findPasInsc(
+                    $formRecherche->get('site')->getData(),
+                    $formRecherche->get('date1')->getData(),
+                    $formRecherche->get('date2')->getData(),
+                    $user,
+                    $formRecherche->get('nom')->getData());
+                $sorties3 = $sorties;
+                $sorties = array_merge ($sorties2, $sorties3);
+			}
+            if ($formRecherche->get('sortiesPass')->getData()){
+                $sorties2 = $sortieRepository->findPass(
+                    $formRecherche->get('site')->getData(),
+                    $formRecherche->get('date1')->getData(),
+                    $formRecherche->get('date2')->getData(),
+                    $user,
+                    $formRecherche->get('nom')->getData());
+                $sorties3 = $sorties;
+                $sorties = array_merge ($sorties2, $sorties3);
+			}
+
+
             return $this->render("sortie/index.html.twig",
                 ["form" => $formRecherche->createView(), "sorties" => $sorties]);
         }
@@ -188,6 +244,26 @@ class SortieController extends Controller
         return $this->render("sortie/annuler.html.twig",["form"=>$form->createView(),"sortie"=>$sortie]);
     }
 
+    /**
+     * @param Sortie $sortie
+     *
+     * @Route("/{id}/publier", name="sortie_publie")
+     */
+    function publierSortie(Sortie $sortie, EntityManagerInterface $entityManager, Request $request){
+
+        $form = $this->createForm(AnnulSortieType::class);
+        $form->handleRequest($request);
+        if($form->isValid() && $form->isSubmitted()){
+            $sortie->setEtat($entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Annulée"])[0]);
+            $sortie->setMotifAnnul($form->get('motif')->getData());
+            $entityManager->flush();
+            $this->addFlash('info','Sortie annulée');
+
+            return $this->redirectToRoute("sortie_index");
+        }
+
+        return $this->render("sortie/annuler.html.twig",["form"=>$form->createView(),"sortie"=>$sortie]);
+    }
 }
 
 
