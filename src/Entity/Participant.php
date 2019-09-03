@@ -86,42 +86,9 @@ class Participant implements UserInterface
     private $roles;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Media", inversedBy="participant", cascade={"persist"})
      */
-    private $urlImg;
-
-    /**
-     * @var File
-     *
-     * @Vich\UploadableField(mapping="participant_images", fileNameProperty="urlImg")
-     *
-     * @Assert\Image(
-     *     maxWidth = 3000,
-     *     maxHeight = 3000,
-     *     maxWidthMessage="La taille de l'image ne peut pas dépasser {{ max_width }} x 3000 pixels",
-     *     maxHeightMessage="La taille de l'image ne peut pas dépasser 3000 x {{ max_height }} pixels",
-     *     maxSize="1999k",
-     *     maxSizeMessage="L'image ne peut pas dépasser 2Mo",
-     *     mimeTypes = {
-     *          "image/png",
-     *          "image/jpeg",
-     *          "image/jpg",
-     *          "image/gif",
-     *      },
-     *     mimeTypesMessage="Format d'image invalide, insérez une image de format jpeg, jpg, gif ou png",
-     * )
-     */
-    private $imageFile;
-
-    /**
-     * @var \DateTime
-     * champ nécessaire au bon fonctionnement de l'upload d'image
-     * voir https://symfony.com/doc/master/bundles/EasyAdminBundle/integration/vichuploaderbundle.html
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
+    private $media;
 
     /**
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="listUsers")
@@ -379,4 +346,22 @@ class Participant implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMedia()
+    {
+        return $this->media;
+    }
+
+    /**
+     * @param mixed $media
+     */
+    public function setMedia($media): void
+    {
+        $this->media = $media;
+    }
+
+
 }

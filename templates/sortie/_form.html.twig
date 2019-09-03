@@ -1,5 +1,5 @@
 <div class="col-lg-12 text-center">
-{{ form_start(form) }}
+    {{ form_start(form) }}
     {{ form_row(form.nom) }}
     {{ form_row(form.datedebut) }}
     {{ form_row(form.datecloture) }}
@@ -20,7 +20,9 @@
     <!-- Modal -->
 
     {{ form_row(form.enreg) }}
-    {{ form_row(form.publi) }}
+    {% if sortie.etat.id == 2 %}
+        {{ include('sortie/_publie_form.html.twig') }}
+    {% endif %}
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

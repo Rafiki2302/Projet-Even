@@ -6,6 +6,7 @@ use App\Entity\Lieu;
 use App\Form\LieuType;
 use App\Repository\LieuRepository;
 use App\Service\LieuService;
+use App\Service\UtilService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -127,7 +128,7 @@ class LieuController extends Controller
     /**
      * @Route("/{id}/edit", name="lieu_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Lieu $lieu): Response
+    public function edit(Request $request, Lieu $lieu, UtilService $utilService): Response
     {
         $form = $this->createForm(LieuType::class, $lieu);
         $form->handleRequest($request);
