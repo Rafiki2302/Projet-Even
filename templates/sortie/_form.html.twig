@@ -20,7 +20,9 @@
     <!-- Modal -->
 
     {{ form_row(form.enreg) }}
-    {{ form_row(form.publi) }}
+    {% if sortie.etat.id == 2 %}
+    {{ include('sortie/_publie_form.html.twig') }}
+    {% endif %}
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -36,7 +38,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="enregistrerLieu" data-dismiss="modal">Enregistrer ce nouveau lieu</button>
+                    <button type="button" class="btn btn-primary" id="enregistrerLieu" >Enregistrer ce nouveau lieu</button>
                 </div>
             </div>
         </div>
@@ -48,6 +50,8 @@
         {% endif %}
         <a href="{{ path('sortie_index') }}" class="btn btn-secondary d-inline">Annuler</a>
     </div>
+    <input type="hidden" id="urlCreationLieu" value="{{ path('lieu_new') }}">
+    <input type="hidden" id="infoLieu" value="{{ path('lieu_infos') }}">
 
 </div>
 

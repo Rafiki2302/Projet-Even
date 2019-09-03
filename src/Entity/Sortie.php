@@ -28,6 +28,7 @@ class Sortie
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime(message="Format de date invalide")
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @var string A "Y-m-d" formatted value
      * @Assert\GreaterThan("today", message="La date de début doit être supérieure à la date actuelle")
      */
@@ -42,6 +43,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @Assert\DateTime(message="Format de date invalide")
      * @var string A "Y-m-d" formatted value
      * @Assert\GreaterThan("today", message="La date de clôture doit être supérieure à la date actuelle")
@@ -121,7 +123,7 @@ class Sortie
         return $this->datedebut;
     }
 
-    public function setDatedebut(\DateTimeInterface $datedebut): self
+    public function setDatedebut(?\DateTimeInterface $datedebut): self
     {
         $this->datedebut = $datedebut;
 
@@ -177,7 +179,7 @@ class Sortie
         return $this->datecloture;
     }
 
-    public function setDatecloture(\DateTimeInterface $datecloture): self
+    public function setDatecloture(?\DateTimeInterface $datecloture): self
     {
         $this->datecloture = $datecloture;
 
