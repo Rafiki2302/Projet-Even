@@ -3,11 +3,13 @@
 {% block title %}New Participant{% endblock %}
 
 {% block body %}
-    <h1 class="text-center">Créer un nouveau profil</h1>
-    <div class="container">
-        <div class="row">
-            {{ include('participant/_form.html.twig') }}
+    <div class="str-main-container">
+        <h1 class="text-center">Créer un nouveau profil</h1>
+        <div class="container str-form">
+            <div class="row">
+                {{ include('participant/_form.html.twig') }}
 
+            </div>
         </div>
     </div>
 {% endblock %}

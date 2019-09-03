@@ -118,10 +118,22 @@ h1 {
     top: 2px;
 }
 
-.str-form input {
-    margin: 7px 15px;
+.str-form input, .str-form select{
+    margin: 7px 30% 7px 15px;
     padding: 4px 6px;
     border-radius: 6px;
     border: 1px solid lightgrey;
+    min-width: 200px;
+}
 
+.str-form-align-content-right div{
+    text-align: right;
+}
+
+.str-form-align-content-center {
+    text-align: center!important;
+}
+
+.btn-primary {
+    color: #FFFFFF!important;
 }
