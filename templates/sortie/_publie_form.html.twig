@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('sortie_publie', {'id': sortie.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir publier cette sortie ?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
+    <button class="btn btn-danger">Publier la sortie</button>
+</form>
