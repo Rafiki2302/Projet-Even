@@ -38,7 +38,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="enregistrerLieu" data-dismiss="modal">Enregistrer ce nouveau lieu</button>
+                    <button type="button" class="btn btn-primary" id="enregistrerLieu" >Enregistrer ce nouveau lieu</button>
                 </div>
             </div>
         </div>
@@ -50,6 +50,8 @@
         {% endif %}
         <a href="{{ path('sortie_index') }}" class="btn btn-secondary d-inline">Annuler</a>
     </div>
+    <input type="hidden" id="urlCreationLieu" value="{{ path('lieu_new') }}">
+    <input type="hidden" id="infoLieu" value="{{ path('lieu_infos') }}">
 
 </div>
 
