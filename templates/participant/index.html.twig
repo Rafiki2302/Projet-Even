@@ -33,7 +33,7 @@
                     <td>{{ participant.mail }}</td>
                     <td>{{ participant.admin ? 'Yes' : 'No' }}</td>
                     <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
-                    <td>{{ participant.urlImg }}</td>
+                    <td>{{ participant.media.urlImg }}</td>
                     <td>
                         <a href="{{ path('participant_show', {'id': participant.id}) }}" title="voir"><i class="fa fa-eye"></i></a>
                         <a href="{{ path('participant_edit', {'id': participant.id}) }}" title="modifier"><i class="fa fa-pencil"></i></a>
