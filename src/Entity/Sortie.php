@@ -86,7 +86,7 @@ class Sortie
 
     /**
      * @ORM\ManyToOne (targetEntity = "Lieu", inversedBy= "sorties", cascade={"persist"})
-     *
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @Assert\Valid()
      */
     private $lieu;

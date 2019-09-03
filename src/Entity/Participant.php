@@ -91,6 +91,8 @@ class Participant implements UserInterface
     private $media;
 
     /**
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
+     *
      * @ORM\ManyToOne(targetEntity="Site", inversedBy="listUsers")
      * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
      */
@@ -213,35 +215,6 @@ class Participant implements UserInterface
     public function setActif(?bool $actif): self
     {
         $this->actif = $actif;
-
-        return $this;
-    }
-
-    public function getUrlImg(): ?string
-    {
-        return $this->urlImg;
-    }
-
-    public function setUrlImg(?string $urlImg): self
-    {
-        $this->urlImg = $urlImg;
-
-        return $this;
-    }
-
-    public function getImageFile()
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(?File $imageFile): self
-    {
-        $this->imageFile = $imageFile;
-        //pour que l'upload fonctionne, il faut qu'au moins un des champs de la BDD soit modifié, ici updateAt
-        //voir https://symfony.com/doc/master/bundles/EasyAdminBundle/integration/vichuploaderbundle.html
-        if($imageFile !== null){
-            $this->updatedAt = new \DateTime('now');
-        }
 
         return $this;
     }

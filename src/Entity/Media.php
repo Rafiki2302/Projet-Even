@@ -12,8 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @Vich\Uploadable()
  * @package App\Entity
+ *
+ * Note : la classe implément Serializable afin de corriger un bug lié à l'appel de la fonction serialize lors de
+ * la modif du profil, qui provoquait un bug lors de la mise à jour de la photo de profil
  */
-class Media
+class Media implements \Serializable
 {
 
     /**
@@ -136,4 +139,28 @@ class Media
     }
 
 
+    /**
+     * String representation of object
+     * @link https://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    /**
+     * Constructs the object
+     * @link https://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        // TODO: Implement unserialize() method.
+    }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,16 +25,20 @@ class ParticipantType extends AbstractType
             ->add('pseudo',TextType::class,["required"=>false,"label"=>"Pseudonyme : ", "trim"=>true])
             ->add('telephone',TextType::class,["required"=>false,"label"=>"Téléphone : ", "trim"=>true])
             ->add('mail',EmailType::class,["required"=>false,"label"=>"Adresse email :", "trim"=>true])
-            ->add('motDePasseEnClair',RepeatedType::class,[
+            ->add('motDePasseEnClair',PasswordType::class,[
                 "required"=>false,
                 "mapped"=>false,
-                "first_options"=>["label"=>"Mot de passe :"],
-                "second_options"=>["label"=>"Confirmez votre mot de passe :"],
+                "label"=>"Mot de passe :",
+            ])
+            ->add("motdePasseRepeat",PasswordType::class,[
+                "required"=>false,
+                "mapped"=>false,
+                "label"=>"Confirmez votre mot de passe : ",
             ])
             ->add('site',EntityType::class,[
                 "choice_label"=>"nom",
                 "class"=>Site::class,
-                "label"=>"Site de l'ENI auquel vous êtes rattaché :"
+                "label"=>"Site de l'ENI auquel vous êtes rattaché :",
             ])
 
             ->add('media',MediaType::class)

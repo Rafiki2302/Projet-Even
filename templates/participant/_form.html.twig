@@ -1,5 +1,6 @@
 {# COnditionnement de l'affichage du formulaire sur un col de 9 ou de 12 selon que l'on est sur une création
 ou une modif du profil. Car en modif de profil, la photo doit apparaitre sur la même col #}
+
 {% if app.request.attributes.get('_route') is same as('participant_new') %}
         <div class="col-lg-12 text-center str-form-align-content-right">
 {% else %}
@@ -17,7 +18,8 @@ ou une modif du profil. Car en modif de profil, la photo doit apparaitre sur la 
                 {% for message in app.flashes('erreur') %}
                     {{ message }}
                 {% endfor %}
-                {{ form_widget(form.motDePasseEnClair) }}
+                {{ form_row(form.motDePasseEnClair) }}
+                {{ form_row(form.motdePasseRepeat) }}
                 {{ form_row(form.site) }}
                 {{ form_widget(form.media) }}
 

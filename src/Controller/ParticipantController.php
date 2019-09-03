@@ -45,6 +45,10 @@ class ParticipantController extends Controller
             if(!$participantService->validatePassword($form->get("motDePasseEnClair")->getData())){
                 $this->addFlash('erreur',"Mot de passe incorrect : il doit contenir au moins 8 caractères dont une minuscule,
                      une majuscule, un chiffre et un caractère spécial");
+                }
+            elseif (!$participantService->validatePwConfirm($form->get("motDePasseEnClair")
+                ->getData(),$form->get("motdePasseRepeat")->getData())){
+                $this->addFlash('erreur',"Les deux mots de passe ne sont pas identiques");
             }
             //si le pw est correct, on vérifie que les autres éléments du form sont OK, si oui, on flush
             else{
@@ -56,8 +60,9 @@ class ParticipantController extends Controller
                         $entityManager = $this->getDoctrine()->getManager();
                         $entityManager->persist($participant);
                         $entityManager->flush();
+                        $this->addFlash("info","Votre compte a bien été créé ! Connectez-vous");
 
-                        return $this->redirectToRoute('sortie_index');
+                        return $this->redirectToRoute('app_login');
                     }
                     catch (UniqueConstraintViolationException $exception){
                         $this->addFlash("erreurUnique","Le pseudo ou l'email est déjà utilisé par un autre participant");
@@ -100,20 +105,24 @@ class ParticipantController extends Controller
             if ($form->isSubmitted()) {
                 //on checke que le pw respecte les contraintes
                 //si ne respecte pas : ajoute message erreur à afficher dans la page de la modif du profil
-                if (!$participantService->validatePassword($form->get("motDePasseEnClair")->getData())) {
-                    $this->addFlash('erreur', "Mot de passe incorrect : il doit contenir au moins 8 caractères dont une minuscule,
+                if(!$participantService->validatePassword($form->get("motDePasseEnClair")->getData())){
+                    $this->addFlash('erreur',"Mot de passe incorrect : il doit contenir au moins 8 caractères dont une minuscule,
                      une majuscule, un chiffre et un caractère spécial");
+                }
+                elseif (!$participantService->validatePwConfirm($form->get("motDePasseEnClair")
+                    ->getData(),$form->get("motdePasseRepeat")->getData())){
+                    $this->addFlash('erreur',"Les deux mots de passe ne sont pas identiques");
                 } //si le pw est correct, on vérifie que les autres éléments du form sont OK, si oui, on flush
                 else {
                     if ($form->isValid()) {
 
                         try {
                             $participant->setMotDePasse($encoder->encodePassword($participant, $form->get("motDePasseEnClair")->getData()));
-
                             $entityManager = $this->getDoctrine()->getManager();
                             $entityManager->flush();
+                            $this->addFlash("info","Votre a bien été modifié !");
 
-                            return $this->redirectToRoute('participant_index');
+                            return $this->redirectToRoute('participant_edit',["id"=>$participant->getId()]);
                         } //si le pw ou l'email est déjà présent en BDD, cela renverra cette exception
                         catch (UniqueConstraintViolationException $exception) {
                             $this->addFlash("erreurUnique", "Le pseudo ou l'email est déjà utilisé par un autre participant");

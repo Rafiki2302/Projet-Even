@@ -60,6 +60,8 @@ class Lieu
 
     /**
      * @ORM\ManyToOne (targetEntity = "Ville", inversedBy= "lieus")
+     *
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
      */
     private $ville;
 

@@ -23,4 +23,13 @@ class ParticipantService
             return true;
         }
     }
+
+    public function validatePwConfirm(?string $pw, ?string $pwConfirm){
+        if($pw === $pwConfirm){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
