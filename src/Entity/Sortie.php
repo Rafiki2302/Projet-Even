@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
 /**
@@ -31,6 +32,7 @@ class Sortie
      * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @var string A "Y-m-d" formatted value
      * @Assert\GreaterThan("today", message="La date de début doit être supérieure à la date actuelle")
+     *
      */
     private $datedebut;
 
@@ -47,6 +49,7 @@ class Sortie
      * @Assert\DateTime(message="Format de date invalide")
      * @var string A "Y-m-d" formatted value
      * @Assert\GreaterThan("today", message="La date de clôture doit être supérieure à la date actuelle")
+     * @Assert\Expression("value < this.getDatedebut()", message= "cette date doit être antérieure à celle de l'évènement")
      */
     private $datecloture;
 
