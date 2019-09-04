@@ -66,7 +66,7 @@ class LieuController extends Controller
             $lieu->setNom($lieuJS['nom']);
             $lieu->setRue($lieuJS['rue']);
 
-            $message = '';
+            $message = [];
             $latitude = $lieuJS['latitude'];
             $longitude = $lieuJS['longitude'];
 
@@ -76,17 +76,17 @@ class LieuController extends Controller
             if(strpos($longitude,",")){
                 $longitude = str_replace(",",".",$longitude);
             }
-            if(preg_match("#^[0-9]*\.?[0-9]*$$#",$latitude) === 0){
+            if(preg_match("#^-?[0-9]*\.?[0-9]*$$#",$latitude) === 0){
 
-                $message = "La latitude doit être comprise entre -90 et 90 degrés";
+                $message["errLat"] = "La latitude doit être comprise entre -90 et 90 degrés";
             }
             else{
                 if ($latitude !== ''){
                     $lieu->setLatitude(floatval($latitude));
                 }
             }
-            if(preg_match("#^[0-9]*[\.,]?[0-9]*$#",$longitude) === 0){
-                $message = "La longitude doit être comprise entre -90 et 90 degrés";
+            if(preg_match("#^-?[0-9]*[\.,]?[0-9]*$#",$longitude) === 0){
+                $message["errLong"] = "La longitude doit être comprise entre -90 et 90 degrés";
             }
             else{
                 if($longitude !== ''){
@@ -96,10 +96,10 @@ class LieuController extends Controller
             $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));
 
             //On checke si les données sont ok, si ko envoi d'un message d'erreur en ajax, sinon on insère le lieu en bdd
-            $message = $message.$lieuService->validerLieu($lieu);
-            $tabInfos = ["erreur"=>$message];
-            if($message !== ""){
-                return new JsonResponse(["data" => json_encode($tabInfos)]);
+            $message = array_merge($message,$lieuService->validerLieu($lieu));
+            $tabErreurs = ["erreur"=>$message];
+            if(count($message) !== 0){
+                return new JsonResponse(["data" => json_encode($tabErreurs)]);
             }
             else{
                 $entityManager->persist($lieu);

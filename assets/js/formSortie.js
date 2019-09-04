@@ -35,12 +35,16 @@ function enregistrerLieu(lieu){
         data: {lieu: lieu}
     }).done(function (msg) {
         $("#messErreur").remove();
-        if(JSON.parse(msg["data"]).erreur !== undefined){
-            $("<p id='messErreur'>"+JSON.parse(msg["data"]).erreur+"</p>").insertBefore("#sortie_nouveauLieu");
+        console.log(JSON.parse(msg["data"]).erreur);
+        if(JSON.parse(msg["data"]) !== undefined){
+            let tabErreurs = JSON.parse(msg["data"]).erreur;
+            $("<div id='messErreur'>").insertBefore("#sortie_nouveauLieu");
+            for(var attrib in tabErreurs){
+                $("#messErreur").append($("<p'>"+tabErreurs[attrib]+"</p>"));
+            }
         }
         else{
             var lieu = JSON.parse(msg["data"]);
-            console.log(lieu);
             $("#sortie_lieu option:selected").prop('selected',false);
             $("#sortie_lieu").append(new Option(lieu.nomLieu,lieu.idLieu,true,true));
             $("#sortie_lieu:last-child").prop('selected',true);
