@@ -37,8 +37,8 @@ class Sortie
     private $datedebut;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @Assert\GreaterThan(0,message="La durée de l'événement ne peut pas être négative")
      */
     private $duree;

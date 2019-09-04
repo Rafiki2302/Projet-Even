@@ -3,19 +3,11 @@ const $ = require('jquery');
 
 $(document).ready(function ($) {
     affLieu($);
-
-
 });
 
 $("#sortie_lieu").change(function (event) {
     affLieu();
 });
-
-$("#testSelect").click(function(event){
-    var compteur = 3;
-    $("#sortie_lieu option[value='5']").prop('selected',true);
-    compteur++;
-})
 
 $("#enregistrerLieu").click(function (event) {
    var nomLieu = $("#sortie_nouveauLieu_nom").val();

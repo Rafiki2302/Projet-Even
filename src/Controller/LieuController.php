@@ -67,22 +67,30 @@ class LieuController extends Controller
             $lieu->setRue($lieuJS['rue']);
 
             $message = '';
+            $latitude = $lieuJS['latitude'];
+            $longitude = $lieuJS['longitude'];
 
+            if(strpos($latitude,",")){
+                $latitude = str_replace(",",".",$latitude);
+            }
+            if(strpos($longitude,",")){
+                $longitude = str_replace(",",".",$longitude);
+            }
+            if(preg_match("#^[0-9]*\.?[0-9]*$$#",$latitude) === 0){
 
-            if(preg_match("#^[0-9]*$#",$lieuJS['latitude']) === 0){
                 $message = "La latitude doit être comprise entre -90 et 90 degrés";
             }
             else{
-                if ($lieuJS['latitude'] !== ''){
-                    $lieu->setLatitude(floatval($lieuJS['latitude']));
+                if ($latitude !== ''){
+                    $lieu->setLatitude(floatval($latitude));
                 }
             }
-            if(preg_match("#^[0-9]*#",$lieuJS['latitude']) === 0){
+            if(preg_match("#^[0-9]*[\.,]?[0-9]*$#",$longitude) === 0){
                 $message = "La longitude doit être comprise entre -90 et 90 degrés";
             }
             else{
-                if($lieuJS['longitude'] !== ''){
-                    $lieu->setLongitude(floatval($lieuJS['longitude']));
+                if($longitude !== ''){
+                    $lieu->setLongitude(floatval($longitude));
                 }
             }
             $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));

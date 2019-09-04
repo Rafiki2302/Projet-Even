@@ -34,6 +34,7 @@ class SortieType extends AbstractType
                 //  "trim" => true,
                 "label" => "Durée prévue",
                 "required"=>false,
+                "invalid_message"=>"La durée doit être un nombre",
                 ])
             ->add('datecloture', DateTimeType::class, [
                 //  "trim" => true,
@@ -48,6 +49,7 @@ class SortieType extends AbstractType
                 //  "trim" => true,
                 "label" => "Nombre de places",
                 "required"=>false,
+                "invalid_message"=>"Le nombre de places doit être un nombre",
                 ])
             ->add('descriptioninfos', TextareaType::class,[
             //  "trim" => true,
