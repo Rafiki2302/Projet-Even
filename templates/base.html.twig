@@ -20,18 +20,21 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <span class="nav-link">Hello {{ app.user.pseudo }}</span>
+                            <span class="nav-link">Hello
+                                {% if app.user %} {{ app.user.pseudo }}{%endif %}</span>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="">Accueil</a>
+                            <a class="nav-link" href="{{ path("sortie_index") }}">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Mon Profil</a>
+                            {% if app.user %}
+                            <a class="nav-link" href="{{ path('participant_show', {'id': app.user.id}) }}">Mon Profil</a>
+                            {% endif %}
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Se déconnecter</a>
+                            <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
                         </li>
                     </ul>
                 </div>

@@ -34,41 +34,29 @@ class SortieController extends Controller
         $sorties3 = [];
         $user = $this->getUser();
 
-
         $formRecherche = $this->createForm(RechercheType::class);
         $formRecherche->handleRequest($request);
+
+        $p1 = $formRecherche->get('site')->getData();
+        $p2 = $formRecherche->get('date1')->getData();
+        $p3 = $formRecherche->get('date2')->getData();
+        $p4 = $formRecherche->get('nom')->getData();
 
         if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
            if(!$formRecherche->get('sortiesOrga')->getData()
            && !$formRecherche->get('sortiesInsc')->getData()
            && !$formRecherche->get('sortiesPasInsc')->getData()
            && !$formRecherche->get('sortiesPass')->getData()){
-               $sorties = $sortieRepository->findBySeveralFields(
-                   $formRecherche->get('site')->getData(),
-                   $user,
-                   $formRecherche->get('nom')->getData(),
-                   $formRecherche->get('date1')->getData(),
-                   $formRecherche->get('date2')->getData()
-               );
+               $sorties = $sortieRepository->findBySeveralFields($p1, $user, $p4, $p2, $p3);
            }
 
             if ($formRecherche->get('sortiesOrga')->getData())  {
-                $sorties2 = $sortieRepository->findOrga(
-                    $formRecherche->get('site')->getData(),
-                    $formRecherche->get('date1')->getData(),
-                    $formRecherche->get('date2')->getData(),
-                    $user,
-                    $formRecherche->get('nom')->getData());
+                $sorties2 = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
                 $sorties3=$sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
             if ($formRecherche->get('sortiesInsc')->getData()){
-                $sorties3 = $sortieRepository->findInsc(
-                    $formRecherche->get('site')->getData(),
-                    $formRecherche->get('date1')->getData(),
-                    $formRecherche->get('date2')->getData(),
-                    $user,
-                    $formRecherche->get('nom')->getData());
+                $sorties3 = $sortieRepository->findInsc($p1,$p2,$p3, $user,$p4);
                 $sorties = array_merge ($sorties2, $sorties3);
 
 			}
@@ -76,25 +64,10 @@ class SortieController extends Controller
                 $sortiesI = [];
                 $sortiesO = [];
                 $sortiesS = [];
-                $sortiesS = $sortieRepository->findBySeveralFields(
-                    $formRecherche->get('site')->getData(),
-                    $user,
-                    $formRecherche->get('nom')->getData(),
-                    $formRecherche->get('date1')->getData(),
-                    $formRecherche->get('date2')->getData());
+                $sortiesS = $sortieRepository->findBySeveralFields($p1,$user,$p4,$p2,$p3);
 
-                $sortiesO = $sortieRepository->findInsc(
-                    $formRecherche->get('site')->getData(),
-                    $formRecherche->get('date1')->getData(),
-                    $formRecherche->get('date2')->getData(),
-                    $user,
-                    $formRecherche->get('nom')->getData());
-                $sortiesI = $sortieRepository->findOrga(
-                    $formRecherche->get('site')->getData(),
-                    $formRecherche->get('date1')->getData(),
-                    $formRecherche->get('date2')->getData(),
-                    $user,
-                    $formRecherche->get('nom')->getData());
+                $sortiesO = $sortieRepository->findInsc($p1,$p2,$p3, $user,$p4);
+                $sortiesI = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
 
                 $sorties2 = array_udiff($sortiesS, $sortiesO,  function ($obj_a, $obj_b) {
                     return $obj_a->getId() - $obj_b->getId();});
@@ -104,12 +77,7 @@ class SortieController extends Controller
                 $sorties = array_merge ($sortiesS, $sorties3);
 			}
             if ($formRecherche->get('sortiesPass')->getData()){
-                $sorties2 = $sortieRepository->findPass(
-                    $formRecherche->get('site')->getData(),
-                    $formRecherche->get('date1')->getData(),
-                    $formRecherche->get('date2')->getData(),
-                    $user,
-                    $formRecherche->get('nom')->getData());
+                $sorties2 = $sortieRepository->findPass($p1,$p2,$p3, $user,$p4);
                 $sorties3 = $sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
