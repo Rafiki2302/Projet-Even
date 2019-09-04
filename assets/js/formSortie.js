@@ -4,13 +4,6 @@ const $ = require('jquery');
 $(document).ready(function ($) {
     affLieu($);
 
-    /*
-    méthode permettant d'éviter les conflits avec d'autres librairies
-    elle est utilisée ici pour faire appel à la méthode .modal associée à la modale bootstrap
-    rérérence : https://learn.jquery.com/using-jquery-core/avoid-conflicts-other-libraries/
-    */
-    const $j = jQuery.noConflict();
-    $j("#exampleModal").modal('show');
 
 });
 
@@ -69,8 +62,6 @@ function enregistrerLieu(lieu){
             $(".modal-footer").append(nouvelElement);
 
 
-            //ferme la modale bootstrap via la variable appelant la méthode noConflict()
-            //jQuery.noConflict("#exampleModal").modal('hide');
 
         }
 

@@ -65,16 +65,30 @@ class LieuController extends Controller
             //On reconstruit une entité lieu dans symfony
             $lieu->setNom($lieuJS['nom']);
             $lieu->setRue($lieuJS['rue']);
-            if ($lieuJS['latitude'] !== ''){
-                $lieu->setLatitude(intval($lieuJS['latitude']));
+
+            $message = '';
+
+
+            if(preg_match("#^[0-9]*$#",$lieuJS['latitude']) === 0){
+                $message = "La latitude doit être comprise entre -90 et 90 degrés";
             }
-            if($lieuJS['longitude'] !== ''){
-                $lieu->setLongitude(intval($lieuJS['longitude']));
+            else{
+                if ($lieuJS['latitude'] !== ''){
+                    $lieu->setLatitude(floatval($lieuJS['latitude']));
+                }
+            }
+            if(preg_match("#^[0-9]*#",$lieuJS['latitude']) === 0){
+                $message = "La longitude doit être comprise entre -90 et 90 degrés";
+            }
+            else{
+                if($lieuJS['longitude'] !== ''){
+                    $lieu->setLongitude(floatval($lieuJS['longitude']));
+                }
             }
             $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));
 
             //On checke si les données sont ok, si ko envoi d'un message d'erreur en ajax, sinon on insère le lieu en bdd
-            $message = $lieuService->validerLieu($lieu);
+            $message = $message.$lieuService->validerLieu($lieu);
             $tabInfos = ["erreur"=>$message];
             if($message !== ""){
                 return new JsonResponse(["data" => json_encode($tabInfos)]);

@@ -17,7 +17,12 @@ class LieuService
         if(strlen($lieu->getNom()) > 50){
             $messErreur = "Le nom ne peut pas faire plus de 50 caractères \n";
         }
-
+        if($lieu->getLatitude() !== null && $lieu->getLongitude() === null){
+            $messErreur = $messErreur."Il faut aussi remplir le champ longitude";
+        }
+        if($lieu->getLongitude() !== null && $lieu->getLatitude() === null){
+            $messErreur = $messErreur."Il faut aussi remplir le champ latitude";
+        }
         if($lieu->getRue() === ''){
             if($lieu->getLatitude() === null || $lieu->getLongitude() === null){
                 $messErreur = $messErreur."Il faut remplir soit le champ rue, soit les champs latitude et longitude";
