@@ -9,7 +9,8 @@ $(document).ready(function ($) {
     elle est utilisée ici pour faire appel à la méthode .modal associée à la modale bootstrap
     rérérence : https://learn.jquery.com/using-jquery-core/avoid-conflicts-other-libraries/
     */
-    $j = jQuery.noConflict();
+    const $j = jQuery.noConflict();
+    $j("#exampleModal").modal('show');
 
 });
 
@@ -49,7 +50,6 @@ function enregistrerLieu(lieu){
         data: {lieu: lieu}
     }).done(function (msg) {
         $("#messErreur").remove();
-        console.log(JSON.parse(msg['data']).erreur);
         if(JSON.parse(msg["data"]).erreur !== undefined){
             $("<p id='messErreur'>"+JSON.parse(msg["data"]).erreur+"</p>").insertBefore("#sortie_nouveauLieu");
         }
@@ -60,9 +60,17 @@ function enregistrerLieu(lieu){
             $("#sortie_lieu").append(new Option(lieu.nomLieu,lieu.idLieu,true,true));
             $("#sortie_lieu:last-child").prop('selected',true);
             affLieu();
+            $("<p>"+"Nouveau lieu créé !"+"</p>").insertBefore("#sortie_nouveauLieu");
+            $(".modal-footer").empty();
+            var nouvelElement = $("<button/>",{
+                html: "Retour à la création de la sortie",
+                class: "btn btn-primary",
+            });
+            $(".modal-footer").append(nouvelElement);
+
 
             //ferme la modale bootstrap via la variable appelant la méthode noConflict()
-            $j("#exampleModal").modal('hide');
+            //jQuery.noConflict("#exampleModal").modal('hide');
 
         }
 
