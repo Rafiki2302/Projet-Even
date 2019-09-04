@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1 class="text-center">Sortie : {{ sortie.nom }}</h1>
+    {{  include('_aff_messages_info.html.twig') }}
     <div class="container">
         <div class="row">
             <table class="table col-lg-12">
@@ -68,8 +69,8 @@
                 <a href="{{ path('sortie_edit',{'id': sortie.id}) }}" class="btn btn-success">Modifier</a>
                     {{ include('sortie/_delete_form.html.twig')}}
                 {% endif %}
-                {% if app.user is same as(sortie.organisateur) and sortie.etat is same as('Ouverte') %}
-                <a href="" class="btn btn-success">Annuler</a>
+                {% if app.user is same as(sortie.organisateur) and sortie.etat.libelle is same as('Ouverte') %}
+                <a href="{{ path('sortie_annul',{"id":sortie.id}) }}" class="btn btn-success">Annuler la sortie</a>
                 {% endif %}
 
 

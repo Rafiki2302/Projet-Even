@@ -265,7 +265,7 @@ class Sortie
     /**
      * @return string
      */
-    public function getMotifAnnul(): string
+    public function getMotifAnnul(): ?string
     {
         return $this->motifAnnul;
     }
@@ -273,7 +273,7 @@ class Sortie
     /**
      * @param string $motifAnnul
      */
-    public function setMotifAnnul(string $motifAnnul): void
+    public function setMotifAnnul(?string $motifAnnul): void
     {
         $this->motifAnnul = $motifAnnul;
     }
