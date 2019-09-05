@@ -189,7 +189,8 @@ class SortieController extends Controller
             return $this->redirecToAccueil();
         }
         //n'affiche pas la page si la date de la sortie est passée de plus de 30 jours
-        elseif($sortie->getDatedebut() > ($dateActuelle->add(new \DateInterval('P30D')))){
+        elseif($sortie->getDatedebut() < ($dateActuelle->add(new \DateInterval('P30D')))){
+
             return $this->redirecToAccueil();
         }
         else{

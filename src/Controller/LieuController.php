@@ -118,13 +118,13 @@ class LieuController extends Controller
 
 
         }
-        //comportement si appel de la page en get
+
         else{
-            return $this->render('lieu/new.html.twig', [
-                'sortie' => $lieu,
-                'form' => $form->createView(),
+            $this->addFlash("erreur","Vous n'avez pas le droit d'accéder à cette page");
+            return $this->redirectToRoute('sortie_index', [
             ]);
         }
+
 
 
 
@@ -203,16 +203,23 @@ class LieuController extends Controller
      */
     public function infoLieu(Request $request, EntityManagerInterface $entityManager){
 
-        $idLieu = $request->get('id');
+        if($request->isMethod('POST')){
+            $idLieu = $request->get('id');
 
-        $lieu = $entityManager->getRepository("App:Lieu")->find($idLieu);
-        $tablieu = [
-            'rue' => $lieu->getRue(),
-            'ville'=>$lieu->getVille()->getNom(),
-            'codeP'=>$lieu->getVille()->getCodePostal(),
-            'lat'=>$lieu->getLatitude(),
-            'lon'=>$lieu->getLongitude(),
-        ];
-        return new JsonResponse(["data" => json_encode($tablieu)]);
+            $lieu = $entityManager->getRepository("App:Lieu")->find($idLieu);
+            $tablieu = [
+                'rue' => $lieu->getRue(),
+                'ville'=>$lieu->getVille()->getNom(),
+                'codeP'=>$lieu->getVille()->getCodePostal(),
+                'lat'=>$lieu->getLatitude(),
+                'lon'=>$lieu->getLongitude(),
+            ];
+            return new JsonResponse(["data" => json_encode($tablieu)]);
+        }
+        else{
+            $this->addFlash("erreur","Vous n'avez pas le droit d'accéder à cette page");
+            return $this->redirectToRoute('sortie_index', [
+            ]);
+        }
     }
 }

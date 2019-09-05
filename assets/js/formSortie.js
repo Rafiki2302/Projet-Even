@@ -92,7 +92,7 @@ function affLieu(){
             $("#longitude").text("Longitude : " + lieu.lon);
         }
     }).fail(function () {
-        console.log("Erreur dans la requête Ajax");
+
     });
 }
 
