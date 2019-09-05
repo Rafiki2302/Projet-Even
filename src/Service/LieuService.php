@@ -27,10 +27,10 @@ class LieuService
                 $messErreur["errRueLatLong"] = "Il faut remplir soit le champ rue, soit les champs latitude et longitude";
             }
         }
-        if(!is_float($lieu->getLongitude()) || $lieu->getLongitude() < -180 || $lieu->getLongitude() > 180){
+        if((!is_float($lieu->getLongitude()) || $lieu->getLongitude() < -180 || $lieu->getLongitude() > 180) && $lieu->getLongitude() !== null){
             $messErreur["errLong"] = "La longitude doit être comprise entre -180 et 180";
         }
-        if(!is_float($lieu->getLatitude()) || $lieu->getLatitude() < -90 || $lieu->getLatitude() > 90){
+        if((!is_float($lieu->getLatitude()) || $lieu->getLatitude() < -90 || $lieu->getLatitude() > 90) && $lieu->getLatitude() !== null){
             $messErreur["errLat"] = "La latitude doit être comprise entre -90 et 90";
         }
         return $messErreur;

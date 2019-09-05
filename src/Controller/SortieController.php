@@ -13,6 +13,7 @@ use App\Service\UtilService;
 use DateInterval;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,8 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @Route("/sortie")
+ *
+ * @IsGranted("ROLE_USER")
  */
 class SortieController extends Controller
 {
