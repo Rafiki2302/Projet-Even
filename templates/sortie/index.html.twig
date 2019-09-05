@@ -57,7 +57,7 @@
             <tbody>
             {% for sortie in sorties %}
 
-                {% if app.user is not same as (sortie.organisateur) and sortie.etat.id == 1 %}
+                {% if app.user is not same as (sortie.organisateur) and sortie.etat.id                                                   == 1 %}
                 <tr style="display: none;">
 
                 </tr>
@@ -67,7 +67,8 @@
                         <td>{{ sortie.datedebut ? sortie.datedebut|date('d/m/Y H:i:s') : '' }}</td>
                         <td>{{ sortie.duree }}</td>
                         <td>{{ sortie.datecloture ? sortie.datecloture|date('d/m/Y H:i:s') : '' }}</td>
-                        <td>{{ sortie.participants.count}}/{{ sortie.nbinscriptionsmax }}</td>
+                        <td>{{ sortie.participants.count}}/{{ sortie.nbinscriptionsmax }}
+                        {%  if sortie.participants.count >= sortie.nbinscriptionsmax %} complet{% endif%}</td>
                         <td>{{ sortie.descriptioninfos }}</td>
                         <td><a href="{{ path('participant_show', {'id': sortie.organisateur.id}) }}">
                             {{ sortie.organisateur.getNom() }}</a></td>
@@ -80,7 +81,7 @@
                             {% if app.user == sortie.organisateur and sortie.etat.libelle == "Créée" %}
                                 <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">modifier</a>
                             {% endif %}
-                            {% if app.user != sortie.organisateur and sortie.datecloture>= "now"%}
+                            {% if app.user != sortie.organisateur and sortie.datecloture>= "now" and sortie.participants.count < sortie.nbinscriptionsmax%}
                                 {% if app.user in sortie.participants %}
                                     <a href="{{ path('sortie_insc', {'id': sortie.id}) }}">se désinscrire</a>
                                 {% else %}
