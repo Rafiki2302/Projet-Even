@@ -81,15 +81,28 @@
                         {% endif %}
                         <td>
                             {#contrôle des états et user pour affichage conditionnel des actions#}
-                            <a href="{{ path('sortie_show', {'id': sortie.id}) }}">afficher</a>
-                            {% if app.user == sortie.organisateur and sortie.etat.libelle == "Créée" %}
-                                <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">modifier</a>
-                            {% endif %}
-                            {% if app.user != sortie.organisateur and sortie.etat.libelle == "Ouverte" and sortie.participants.count < sortie.nbinscriptionsmax%}
-                                {% if app.user in sortie.participants %}
-                                    <a href="{{ path('sortie_insc', {'id': sortie.id}) }}">se désinscrire</a>
-                                {% else %}
-                                    <a href="{{ path('sortie_insc', {'id': sortie.id}) }}">s'inscrire</a>
+
+                            {# Si la date de début de la sortie est supérieur à la date actuelle -30 jours,
+                            aucuneaction n'est disponible #}
+                            {% if date(sortie.datedebut) >  date("-30days")  %}
+                                <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                                {% if app.user == sortie.organisateur and sortie.etat.libelle == "Créée" %}
+                                    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                                    <div class="str-sortieSuppr">
+                                        {{ include('sortie/_delete_form.html.twig')}}
+                                    </div>
+                                {% endif %}
+                                {% if app.user is same as(sortie.organisateur) and (sortie.etat.libelle == "Ouverte" or sortie.etat.libelle == "Clôturée") and date(sortie.datedebut) > date("now") %}
+                                    <a href="{{ path('sortie_annul', {'id': sortie.id}) }}">Annuler</a>
+                                {% endif %}
+                                {% if app.user != sortie.organisateur and sortie.etat.libelle == "Ouverte" and date(sortie.datecloture) > date("now") %}
+                                    {% if app.user in sortie.participants %}
+                                        <a href="{{ path('sortie_insc', {'id': sortie.id}) }}">Se désinscrire</a>
+                                    {% else %}
+                                        {% if sortie.participants.count < sortie.nbinscriptionsmax %}
+                                            <a href="{{ path('sortie_insc', {'id': sortie.id}) }}">S'inscrire</a>
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </td>
