@@ -54,9 +54,11 @@ class RechercheType extends AbstractType
             ])
             ->add('date1', DateType::class, [
                 "label"=>"du",
+                "data"=>new \DateTime("2019-01-01")
             ])
 			->add('date2', DateType::class, [
-                "label"=>"au"
+                "label"=>"au",
+                "data"=>new \DateTime("2022-01-01"),
             ]);
 
         ;

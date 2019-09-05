@@ -39,9 +39,15 @@
                     </tr>
                     {{ include('sortie/_aff_lieu_ds_sortie_html_twig')}}
                     <tr>
-                        <th>Etat</th>
+                        <th>Statut :</th>
                         <td>{{ sortie.etat.libelle }}</td>
                     </tr>
+                {% if sortie.etat.libelle is same as('Annulée') %}
+                    <tr>
+                        <th>Motif d'annulation : </th>
+                        <td>{{ sortie.motifAnnul }}</td>
+                    </tr>
+                {% endif %}
                 </tbody>
             </table>
             <div class="col-lg-3">
