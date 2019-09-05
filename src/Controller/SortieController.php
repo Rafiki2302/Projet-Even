@@ -10,6 +10,7 @@ use App\Form\RechercheType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use App\Service\UtilService;
+use DateInterval;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @Route("/sortie")
@@ -27,7 +29,7 @@ class SortieController extends Controller
     /**
      * @Route("/", name="sortie_index", methods={"GET","POST"})
      */
-    public function index(SortieRepository $sortieRepository, Request $request): Response
+    public function index(SortieRepository $sortieRepository, Request $request,EntityManagerInterface $entityManager): Response
     {
         $sorties = [];
         $sorties2 = [];
@@ -37,30 +39,34 @@ class SortieController extends Controller
         $formRecherche = $this->createForm(RechercheType::class);
         $formRecherche->handleRequest($request);
 
+        /* données des filtres du formulaire de recherche à passer en paramètres*/
         $p1 = $formRecherche->get('site')->getData();
         $p2 = $formRecherche->get('date1')->getData();
         $p3 = $formRecherche->get('date2')->getData();
         $p4 = $formRecherche->get('nom')->getData();
+        $orga = $formRecherche->get('sortiesOrga')->getData();
+        $insc = $formRecherche->get('sortiesInsc')->getData();
+        $pasInsc =$formRecherche->get('sortiesPasInsc')->getData();
+        $pass =  $formRecherche->get('sortiesPass')->getData();
 
+        /*filtres cumulatifs : l'array $sorties est alimentée au fur et à mesure des filtres
+            les filtres sélectifs sont traités dans le repository*/
         if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
-           if(!$formRecherche->get('sortiesOrga')->getData()
-           && !$formRecherche->get('sortiesInsc')->getData()
-           && !$formRecherche->get('sortiesPasInsc')->getData()
-           && !$formRecherche->get('sortiesPass')->getData()){
+           if(!$orga && !$insc && !$pasInsc && !$pass){
                $sorties = $sortieRepository->findBySeveralFields($p1, $user, $p4, $p2, $p3);
            }
 
-            if ($formRecherche->get('sortiesOrga')->getData())  {
+            if ($orga)  {
                 $sorties2 = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
                 $sorties3=$sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
-            if ($formRecherche->get('sortiesInsc')->getData()){
+            if ($insc){
                 $sorties3 = $sortieRepository->findInsc($p1,$p2,$p3, $user,$p4);
                 $sorties = array_merge ($sorties2, $sorties3);
 
 			}
-            if ($formRecherche->get('sortiesPasInsc')->getData()){
+            if ($pasInsc){
                 $sortiesI = [];
                 $sortiesO = [];
                 $sortiesS = [];
@@ -76,17 +82,45 @@ class SortieController extends Controller
                 $sorties3 = $sorties;
                 $sorties = array_merge ($sortiesS, $sorties3);
 			}
-            if ($formRecherche->get('sortiesPass')->getData()){
+            if ($pass){
                 $sorties2 = $sortieRepository->findPass($p1,$p2,$p3, $user,$p4);
                 $sorties3 = $sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
 
-
             return $this->render("sortie/index.html.twig",
                 ["form" => $formRecherche->createView(), "sorties" => $sorties]);
         }
-        $sorties = $sortieRepository->findOrder();
+            $sorties = $sortieRepository->findOrder();
+
+           /* mise à jour des états des sorties au premier affichage */
+
+            foreach ($sorties as $sortie){
+
+                date_timezone_set($sortie->getDatecloture(), timezone_open('Europe/Paris'));
+                date_timezone_set($sortie->getDatedebut(), timezone_open('Europe/Paris'));
+                $now = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
+                $dateFin = $sortie->getDatedebut()->add( new DateInterval('PT'.$sortie->getDuree().'S'));
+
+                if($sortie->getDatecloture()<= new \DateTime('now')) {
+                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Clôturée'])[0];
+                    $sortie->setEtat($etat);
+                }
+
+                if ($sortie->getDatedebut() <= $now
+                    && $now <= $dateFin) {
+
+                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Activité en cours'])[0];
+                    $sortie->setEtat($etat);
+                }
+                if($sortie->getDatedebut()->add( new DateInterval('PT'.$sortie->getDuree().'S'))<= $now) {
+                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Passée'])[0];
+                    $sortie->setEtat($etat);
+                }
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($sortie);
+                    $em->flush();
+            }
 
         return $this->render("sortie/index.html.twig",
             ["form" => $formRecherche->createView(), "sorties" => $sorties]);
