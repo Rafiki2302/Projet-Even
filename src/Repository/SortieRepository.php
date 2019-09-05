@@ -38,13 +38,13 @@ class SortieRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOrga( Site $site, $date1, $date2, Participant $user, $nom): ?array
+    public function findOrga(Site $site, $date1, $date2, Participant $user, $nom): ?array
     {
         $qb = $this->createQueryBuilder('s')
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datecloture > :dateJ')
+            ->andWhere('s.datedebut > :dateJ')
             ->setParameter('dateJ', new \DateTime('now'))
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)
@@ -65,7 +65,7 @@ class SortieRepository extends ServiceEntityRepository
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datecloture > :dateJ')
+            ->andWhere('s.datedebut > :dateJ')
             ->setParameter('dateJ', new \DateTime('now'))
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)
@@ -107,7 +107,7 @@ class SortieRepository extends ServiceEntityRepository
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datecloture > :dateJ')
+            ->andWhere('s.datedebut > :dateJ')
             ->setParameter('dateJ', new \DateTime('now'))
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)

@@ -19,8 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
+use DateTimeZone;
 
 /**
  * @Route("/sortie")
@@ -61,6 +60,7 @@ class SortieController extends Controller
 
             if ($orga)  {
                 $sorties2 = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
+                dump($sorties2);
                 $sorties3=$sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
@@ -99,26 +99,29 @@ class SortieController extends Controller
            /* mise à jour des états des sorties au premier affichage */
 
             foreach ($sorties as $sortie){
+                if($sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(['libelle' => 'Créée'])[0]){
 
-                date_timezone_set($sortie->getDatecloture(), timezone_open('Europe/Paris'));
-                date_timezone_set($sortie->getDatedebut(), timezone_open('Europe/Paris'));
-                $now = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
-                $dateFin = $sortie->getDatedebut()->add( new DateInterval('PT'.$sortie->getDuree().'S'));
+                    date_timezone_set($sortie->getDatecloture(), timezone_open('Europe/Paris'));
+                    date_timezone_set($sortie->getDatedebut(), timezone_open('Europe/Paris'));
+                    $now = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
+                    $dateDebut = clone $sortie->getDatedebut();
 
-                if($sortie->getDatecloture()<= new \DateTime('now')) {
-                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Clôturée'])[0];
-                    $sortie->setEtat($etat);
-                }
+                    $dateFin = $dateDebut->add( new DateInterval('PT'.$sortie->getDuree().'M'));
+                    if($sortie->getDatecloture()<= new \DateTime('now')) {
+                        $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Clôturée'])[0];
+                        $sortie->setEtat($etat);
+                    }
 
-                if ($sortie->getDatedebut() <= $now
-                    && $now <= $dateFin) {
+                    if ($sortie->getDatedebut() <= $now
+                        && $now <= $dateFin) {
 
-                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Activité en cours'])[0];
-                    $sortie->setEtat($etat);
-                }
-                if($sortie->getDatedebut()->add( new DateInterval('PT'.$sortie->getDuree().'S'))<= $now) {
-                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Passée'])[0];
-                    $sortie->setEtat($etat);
+                        $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Activité en cours'])[0];
+                        $sortie->setEtat($etat);
+                    }
+                    if($dateFin<= $now) {
+                        $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Passée'])[0];
+                        $sortie->setEtat($etat);
+                    }
                 }
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($sortie);
@@ -162,6 +165,9 @@ class SortieController extends Controller
                     $sortie->setEtat($etat);
                     $this->addFlash('info',"La sortie a bien été publiée !");
                 }
+
+               $sortie = $this->convertDateAvantInsertBDD($sortie);
+
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($sortie);
                 $entityManager->flush();
@@ -189,11 +195,12 @@ class SortieController extends Controller
             return $this->redirecToAccueil();
         }
         //n'affiche pas la page si la date de la sortie est passée de plus de 30 jours
-        elseif($sortie->getDatedebut() < ($dateActuelle->add(new \DateInterval('P30D')))){
-
+        elseif($sortie->getDatedebut() < ($dateActuelle->sub(new \DateInterval('P30D')))){
             return $this->redirecToAccueil();
         }
         else{
+
+            $sortie = $this->convertDateRecupBDD($sortie);
 
             return $this->render('sortie/show.html.twig', [
                 'sortie' => $sortie,
@@ -213,6 +220,8 @@ class SortieController extends Controller
             return $this->redirecToAccueil();
         }
         else {
+
+            $sortie = $this->convertDateRecupBDD($sortie);
             $form = $this->createForm(SortieType::class, $sortie);
             $form->handleRequest($request);
 
@@ -232,6 +241,8 @@ class SortieController extends Controller
                     $this->addFlash('info', "La sortie a bien été publiée !");
                 }
 
+                $sortieModif = $this->convertDateAvantInsertBDD($sortie);
+                $entityManager->persist($sortieModif);
                 $this->getDoctrine()->getManager()->flush();
 
 
@@ -250,7 +261,7 @@ class SortieController extends Controller
      */
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-        if($this->getUser() !== $sortie->getOrganisateur() && $sortie->getEtat()
+        if($this->getUser() !== $sortie->getOrganisateur()
         || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Créée"])[0]){
             return $this->redirecToAccueil();
         }
@@ -281,9 +292,11 @@ class SortieController extends Controller
      */
     public function inscription(Sortie $sortie, EntityManagerInterface $entityManager, Request $request, UtilService $utilService){
 
+        $dateActuelle = new \DateTime('now');
+
         if($this->getUser() === $sortie->getOrganisateur()
             || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
-            || count($sortie->getParticipants()) >=$sortie->getNbinscriptionsmax())
+            || $dateActuelle>$sortie->getDatecloture())
         {
             return $this->redirecToAccueil();
         }
@@ -296,20 +309,15 @@ class SortieController extends Controller
 
             }
             else{
-                $sortie->getParticipants()->add($this->getUser());
-                $this->addFlash('info',"Votre inscription a bien été prise en compte !");
-            }
+                if( count($sortie->getParticipants()) < $sortie->getNbinscriptionsmax()){
+                    $sortie->getParticipants()->add($this->getUser());
+                    $this->addFlash('info',"Votre inscription a bien été prise en compte !");
+                }
+                else{
+                    $this->addFlash('erreur',"Nombre maximal de participants déjà atteint !");
+                }
 
-            /*
-             * Ne pas supprimer : ébauche pour renvoi vers la page précédente du site
-            dump($request->headers->get('Host'));
-            dump($request->headers->get('referer'));
-            $router = $this->get('router');
-            $route = $router->match("/sortie/8/inscription");
-            dump($route);
-            dump($route["_route"]);
-            exit();
-            */
+            }
 
             $entityManager->flush();
 
@@ -331,8 +339,11 @@ class SortieController extends Controller
      */
     function annulerSortie(Sortie $sortie, EntityManagerInterface $entityManager, Request $request){
 
+        $dateActuelle = new \DateTime('now');
+
         if($this->getUser() !== $sortie->getOrganisateur()
-            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]){
+            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
+        || $dateActuelle>$sortie->getDatecloture()){
             return $this->redirecToAccueil();
         }
         else{
@@ -388,9 +399,38 @@ class SortieController extends Controller
     }
     */
 
-    function redirecToAccueil(){
+    private function redirecToAccueil(){
         $this->addFlash("erreur","Vous n'avez pas le droit d'accéder à cette page");
         return $this->redirectToRoute("sortie_index");
+    }
+
+    private function convertDateAvantInsertBDD(Sortie $sortie){
+        $dateCloture = $sortie->getDatecloture();
+        $dateDebut = $sortie->getDatedebut();
+        //on les transforme en heure de paris pour calculer le différentiel
+        date_timezone_set($dateCloture, timezone_open('Europe/Paris'));
+        date_timezone_set($dateDebut, timezone_open('Europe/Paris'));
+        //on calcule le différentiel entre l'heure de paris et l'utc à ces dates précises
+        $offsetDateCloture = $dateCloture->getOffset();
+        $offsetDateDebut = $dateDebut->getOffset();
+        //On reset les dates à leur format initial avant insertion
+        date_timezone_set($dateCloture, timezone_open('UTC'));
+        date_timezone_set($dateDebut, timezone_open('UTC'));
+        //on set les dates en soustrayant le décalage entre heure de paris et utc
+        $sortie->setDatecloture($dateCloture->sub( new \DateInterval('PT'.$offsetDateCloture.'S')));
+        $sortie->setDatedebut($dateDebut->sub( new \DateInterval('PT'.$offsetDateDebut.'S')));
+
+        return $sortie;
+    }
+
+    private function convertDateRecupBDD(Sortie $sortie){
+        $dateCloture = $sortie->getDatecloture();
+        $dateDebut = $sortie->getDatedebut();
+
+        date_timezone_set($dateCloture, timezone_open('Europe/Paris'));
+        date_timezone_set($dateDebut, timezone_open('Europe/Paris'));
+
+        return $sortie;
     }
 }
 

@@ -158,7 +158,6 @@ class ParticipantController extends Controller
                 $participant->setPseudo($participantBackUp->getPseudo());
             }
 
-
             return $this->render('participant/edit.html.twig', [
                 'participant' => $participant,
                 'form' => $form->createView(),

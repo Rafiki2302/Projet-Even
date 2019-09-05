@@ -15,9 +15,7 @@ ou une modif du profil. Car en modif de profil, la photo doit apparaitre sur la 
                 {{ form_row(form.pseudo) }}
                 {{ form_row(form.telephone) }}
                 {{ form_row(form.mail) }}
-                {% for message in app.flashes('erreur') %}
-                    {{ message }}
-                {% endfor %}
+
                 {% if app.request.attributes.get('_route') is same as("participant_edit") %}
                     <button class="btn btn-secondary" type="button" id="changePwd">Changer de mot de passe</button>
                     {% do form.motDePasseEnClair.setRendered %}
@@ -25,6 +23,9 @@ ou une modif du profil. Car en modif de profil, la photo doit apparaitre sur la 
                 {% endif %}
                 {{ form_row(form.site) }}
                 {{ form_widget(form.media) }}
+                {% for message in app.flashes('erreur') %}
+                    {{ message }}
+                {% endfor %}
                 {% if app.request.attributes.get('_route') is same as("participant_new") %}
                     {{ form_row(form.motDePasseEnClair) }}
                     {{ form_row(form.motdePasseRepeat) }}
