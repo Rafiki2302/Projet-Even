@@ -195,8 +195,7 @@ class SortieController extends Controller
             return $this->redirecToAccueil();
         }
         //n'affiche pas la page si la date de la sortie est passée de plus de 30 jours
-        elseif($sortie->getDatedebut() < ($dateActuelle->add(new \DateInterval('P30D')))){
-
+        elseif($sortie->getDatedebut() < ($dateActuelle->sub(new \DateInterval('P30D')))){
             return $this->redirecToAccueil();
         }
         else{
@@ -241,8 +240,6 @@ class SortieController extends Controller
                     $sortie->setEtat($etat);
                     $this->addFlash('info', "La sortie a bien été publiée !");
                 }
-
-                $heureParis = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
 
                 $sortieModif = $this->convertDateAvantInsertBDD($sortie);
                 $entityManager->persist($sortieModif);
@@ -295,9 +292,11 @@ class SortieController extends Controller
      */
     public function inscription(Sortie $sortie, EntityManagerInterface $entityManager, Request $request, UtilService $utilService){
 
+        $dateActuelle = new \DateTime('now');
+
         if($this->getUser() === $sortie->getOrganisateur()
             || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
-            || count($sortie->getParticipants()) >=$sortie->getNbinscriptionsmax())
+            || $dateActuelle>$sortie->getDatecloture())
         {
             return $this->redirecToAccueil();
         }
@@ -310,20 +309,15 @@ class SortieController extends Controller
 
             }
             else{
-                $sortie->getParticipants()->add($this->getUser());
-                $this->addFlash('info',"Votre inscription a bien été prise en compte !");
-            }
+                if( count($sortie->getParticipants()) < $sortie->getNbinscriptionsmax()){
+                    $sortie->getParticipants()->add($this->getUser());
+                    $this->addFlash('info',"Votre inscription a bien été prise en compte !");
+                }
+                else{
+                    $this->addFlash('erreur',"Nombre maximal de participants déjà atteint !");
+                }
 
-            /*
-             * Ne pas supprimer : ébauche pour renvoi vers la page précédente du site
-            dump($request->headers->get('Host'));
-            dump($request->headers->get('referer'));
-            $router = $this->get('router');
-            $route = $router->match("/sortie/8/inscription");
-            dump($route);
-            dump($route["_route"]);
-            exit();
-            */
+            }
 
             $entityManager->flush();
 
@@ -345,8 +339,11 @@ class SortieController extends Controller
      */
     function annulerSortie(Sortie $sortie, EntityManagerInterface $entityManager, Request $request){
 
+        $dateActuelle = new \DateTime('now');
+
         if($this->getUser() !== $sortie->getOrganisateur()
-            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]){
+            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
+        || $dateActuelle>$sortie->getDatecloture()){
             return $this->redirecToAccueil();
         }
         else{
