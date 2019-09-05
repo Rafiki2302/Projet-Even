@@ -61,7 +61,8 @@
             <tbody>
             {% for sortie in sorties %}
 
-                {% if app.user is not same as (sortie.organisateur) and sortie.etat.id                                                   == 1 %}
+                {% if (app.user is not same as (sortie.organisateur) and sortie.etat.id == 1) or
+                    date(sortie.datedebut) < date("-30days") %}
                 <tr style="display: none;">
 
                 </tr>
@@ -82,7 +83,7 @@
                         <td>
                             {#contrôle des états et user pour affichage conditionnel des actions#}
 
-                            {# Si la date de début de la sortie est supérieur à la date actuelle -30 jours,
+                            {# Si le choix dans la date de début de la sortie est supérieure à la date actuelle -30 jours,
                             aucuneaction n'est disponible #}
                             {% if date(sortie.datedebut) >  date("-30days")  %}
                                 <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
