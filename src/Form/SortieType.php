@@ -39,13 +39,13 @@ class SortieType extends AbstractType
             ->add('datecloture', DateTimeType::class, [
                 //  "trim" => true,
                 "label" => "Date limite d'inscription",
-                'data' => new \DateTime('now',new \DateTimeZone("Europe/Paris"))
+
             ])
             ->add('datedebut', DateTimeType::class, [
                 //  "trim" => true,
                 "label" => "Date",
                 "required"=>false,
-                'data' => new \DateTime('now',new \DateTimeZone("Europe/Paris"))
+
             ])
             ->add('nbinscriptionsmax', NumberType::class,[
                 //  "trim" => true,
