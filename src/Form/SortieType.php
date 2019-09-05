@@ -28,7 +28,7 @@ class SortieType extends AbstractType
             ])
             ->add('datedebut', DateTimeType::class, [
                 //  "trim" => true,
-                "label" => "Date",
+                "label" => "Date de la sortie",
             ])
             ->add('duree', NumberType::class,[
                 //  "trim" => true,
