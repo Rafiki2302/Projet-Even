@@ -21,15 +21,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class ParticipantController extends Controller
 {
+
     /**
      * @Route("/", name="participant_index", methods={"GET"})
      */
+    /*
     public function index(ParticipantRepository $participantRepository): Response
     {
         return $this->render('participant/index.html.twig', [
             'participants' => $participantRepository->findAll(),
         ]);
     }
+    */
 
     /**
      * @Route("/new", name="participant_new", methods={"GET","POST"})
@@ -166,6 +169,7 @@ class ParticipantController extends Controller
     /**
      * @Route("/{id}", name="participant_delete", methods={"DELETE"})
      */
+    /*
     public function delete(Request $request, Participant $participant): Response
     {
         if ($this->isCsrfTokenValid('delete'.$participant->getId(), $request->request->get('_token'))) {
@@ -176,5 +180,6 @@ class ParticipantController extends Controller
 
         return $this->redirectToRoute('participant_index');
     }
+    */
 
 }
