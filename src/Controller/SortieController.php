@@ -250,11 +250,12 @@ class SortieController extends Controller
      */
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-        if($this->getUser() !== $sortie->getOrganisateur()
+        if($this->getUser() !== $sortie->getOrganisateur() && $sortie->getEtat()
         || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Créée"])[0]){
             return $this->redirecToAccueil();
         }
         else{
+            if($sortie->getDatedebut())
             if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token'))) {
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($sortie);
@@ -273,6 +274,7 @@ class SortieController extends Controller
 
     /**
      * Inscrit l'utilisateur à une sortie s'il ne l'est pas encore, le désinscrit s'il est déjà inscrit
+     * et si le nombre de participants maximum n'est pas atteint
      * @param Sortie $sortie
      *
      * @Route("/{id}/inscription", name="sortie_insc")
@@ -280,11 +282,12 @@ class SortieController extends Controller
     public function inscription(Sortie $sortie, EntityManagerInterface $entityManager, Request $request, UtilService $utilService){
 
         if($this->getUser() === $sortie->getOrganisateur()
-            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]){
+            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
+            || count($sortie->getParticipants()) >=$sortie->getNbinscriptionsmax())
+        {
             return $this->redirecToAccueil();
         }
         else{
-
 
             //si le user en session fait déjà partie des participants de la sortie, on l'enlève. Sinon on l'ajoute
             if($sortie->getParticipants()->contains($this->getUser())){
