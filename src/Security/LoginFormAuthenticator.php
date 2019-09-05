@@ -67,6 +67,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $user = $this->entityManager->getRepository(Participant::class)->findOneBy(['pseudo' => $credentials['pseudo']]);
 
         if (!$user) {
+
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Le pseudo ou le mot de passe est invalide.');
         }

@@ -44,25 +44,6 @@ class LieuController extends Controller
         $form = $this->createForm(LieuType::class, $lieu);
         $form->handleRequest($request);
 
-
-        /*
-         * Ne pas effacer, tentative de simplifier en passant par le form symfony
-        if ($request->isMethod('POST')){
-            $form->submit($request->request->get($form->getName()));
-            if ($form->isSubmitted()){
-                $entityManager->persist($lieu);
-                $entityManager->flush();
-
-                $infosLieu = ["idLieu"=>$lieu->getId(),"nomLieu"=>$lieu->getNom()];
-
-                return new JsonResponse(["data" => json_encode($lieu)]);
-            }
-            else{
-                return new JsonResponse(["data"=>json_encode("coucou")]);
-            }
-        }
-        */
-
         //la méthode post est réservée à la requête ajax permettant d'ajouter un lieu dans le form sortie
         if($request->isMethod('POST')){
             //On récupère un objet lieu construit en JS
@@ -87,13 +68,15 @@ class LieuController extends Controller
 
                 $message["errLat"] = "La latitude doit être comprise entre -90 et 90 degrés";
             }
+            //sinon, si la latitude n'est pas vide, on l'affecte au lieu
             else{
                 if ($latitude !== ''){
                     $lieu->setLatitude(floatval($latitude));
                 }
             }
+            //tests similaires effectués sur la longitude
             if(preg_match("#^-?[0-9]*[\.,]?[0-9]*$#",$longitude) === 0 && $longitude !== ''){
-                $message["errLong"] = "La longitude doit être comprise entre -90 et 90 degrés";
+                $message["errLong"] = "La longitude doit être comprise entre -180 et 180 degrés";
             }
             else{
                 if($longitude !== ''){
