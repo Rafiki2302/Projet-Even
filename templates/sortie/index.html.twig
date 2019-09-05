@@ -64,9 +64,9 @@
                     {% else %}
                         <tr>
                         <td>{{ sortie.nom }}</td>
-                        <td>{{ sortie.datedebut ? sortie.datedebut|date('d/m/Y H:i:s', 'Europe/Paris') : '' }}</td>
+                        <td>{{ sortie.datedebut ? sortie.datedebut|date('d/m/Y H:i', 'Europe/Paris') : '' }}</td>
                         <td>{{ sortie.duree }}</td>
-                        <td>{{ sortie.datecloture ? sortie.datecloture|date('d/m/Y H:i:s', 'Europe/Paris') : '' }}</td>
+                        <td>{{ sortie.datecloture ? sortie.datecloture|date('d/m/Y H:i', 'Europe/Paris') : '' }}</td>
                         <td>{{ sortie.participants.count}}/{{ sortie.nbinscriptionsmax }}
                         {%  if sortie.participants.count >= sortie.nbinscriptionsmax %} complet{% endif%}</td>
                         <td>{{ sortie.descriptioninfos }}</td>

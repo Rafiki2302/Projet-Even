@@ -98,26 +98,29 @@ class SortieController extends Controller
            /* mise à jour des états des sorties au premier affichage */
 
             foreach ($sorties as $sortie){
+                if($sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(['libelle' => 'Créée'])[0]){
 
-                date_timezone_set($sortie->getDatecloture(), timezone_open('Europe/Paris'));
-                date_timezone_set($sortie->getDatedebut(), timezone_open('Europe/Paris'));
-                $now = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
-                $dateFin = $sortie->getDatedebut()->add( new DateInterval('PT'.$sortie->getDuree().'S'));
+                    date_timezone_set($sortie->getDatecloture(), timezone_open('Europe/Paris'));
+                    date_timezone_set($sortie->getDatedebut(), timezone_open('Europe/Paris'));
+                    $now = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
+                    $dateDebut = clone $sortie->getDatedebut();
 
-                if($sortie->getDatecloture()<= new \DateTime('now')) {
-                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Clôturée'])[0];
-                    $sortie->setEtat($etat);
-                }
+                    $dateFin = $dateDebut->add( new DateInterval('PT'.$sortie->getDuree().'M'));
+                    if($sortie->getDatecloture()<= new \DateTime('now')) {
+                        $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Clôturée'])[0];
+                        $sortie->setEtat($etat);
+                    }
 
-                if ($sortie->getDatedebut() <= $now
-                    && $now <= $dateFin) {
+                    if ($sortie->getDatedebut() <= $now
+                        && $now <= $dateFin) {
 
-                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Activité en cours'])[0];
-                    $sortie->setEtat($etat);
-                }
-                if($sortie->getDatedebut()->add( new DateInterval('PT'.$sortie->getDuree().'S'))<= $now) {
-                    $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Passée'])[0];
-                    $sortie->setEtat($etat);
+                        $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Activité en cours'])[0];
+                        $sortie->setEtat($etat);
+                    }
+                    if($dateFin<= $now) {
+                        $etat = $entityManager->getRepository('App:Etat')->findBy(['libelle' => 'Passée'])[0];
+                        $sortie->setEtat($etat);
+                    }
                 }
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($sortie);
@@ -260,7 +263,7 @@ class SortieController extends Controller
      */
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-        if($this->getUser() !== $sortie->getOrganisateur() && $sortie->getEtat()
+        if($this->getUser() !== $sortie->getOrganisateur()
         || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Créée"])[0]){
             return $this->redirecToAccueil();
         }
