@@ -21,7 +21,7 @@ class RechercheType extends AbstractType
     {
         $builder
             ->add('site',EntityType::class,[
-                "required"=>false,
+                "required"=>true,
                 "mapped"=>false,
                 "choice_label"=>"nom",
                 "class"=>Site::class,

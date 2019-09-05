@@ -126,6 +126,18 @@ h1 {
     min-width: 200px;
 }
 
+.str-form-sortie input, .str-form-sortie select{
+    margin: 7px 15px 7px 15px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid lightgrey;
+    min-width: 200px;
+}
+
+.str-form-sortie-right select {
+    min-width: 100px!important;
+}
+
 .str-form-align-content-right div{
     text-align: right;
 }
@@ -136,4 +148,22 @@ h1 {
 
 .btn-primary {
     color: #FFFFFF!important;
+}
+
+.str-button-rechercher {
+    width: 100%;
+}
+
+.str-button-rechercher button{
+    width: 100%;
+    margin: 20px 5px;
+    color: #FFFFFF!important;
+    height: 50px;
+    border-radius: 20px;
+    border: 1px solid lightgray;
+    background: #0069D9;
+}
+
+.str-sortie-align-content-right{
+    text-align: right;
 }

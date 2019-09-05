@@ -7,24 +7,33 @@
     <div class="str-main-container">
         <h1>Sortie index</h1>
         <h2>Filtrer les sorties</h2>
-        <div class="str-form">
+        <div class="str-form-sortie">
             <div class="str-form-align-content-right">
-                {{ form(form) }}
+
                 {{ form_start(form) }}
                     {{ form_errors(form) }}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                {{ form_row(form.site) }}
+                                {{ form_row(form.nom) }}
+                                {{ form_row(form.sortiesOrga) }}
+                                {{ form_row(form.sortiesInsc) }}
+                                {{ form_row(form.sortiesPasInsc) }}
+                                {{ form_row(form.sortiesPass) }}
+                            </div>
+                            <div class="col str-form-sortie-right">
+                                {{ form_row(form.date1) }}
+                                {{ form_row(form.date2) }}
+                            </div>
+                        </div>
+                    </div>
 
-                    {{ form_row(form.site) }}
-                    {{ form_row(form.nom) }}
-                    {{ form_row(form.sortiesOrga) }}
-                    {{ form_row(form.sortiesInsc) }}
-                    {{ form_row(form.sortiesPasInsc) }}
-                    {{ form_row(form.sortiesPass) }}
-                    {{ form_row(form.date1) }}
-                    {{ form_row(form.date2) }}
-                    {{ form_row(form.nom) }}
-
-
+                <div class="str-button-rechercher">
                     {{ form_row(form.rechercher, { 'label': 'Rechercher' }) }}
+                </div>
+
+
                 {{ form_end(form) }}
             </div>
         </div>
@@ -90,6 +99,8 @@
             </tbody>
         </table>
 
-        <a href="{{ path('sortie_new') }}">Create new</a>
+        <div class="str-sortie-align-content-right">
+            <a href="{{ path('sortie_new') }}" class=" btn btn-primary">Create new</a>
+        </div>
     </div>
 {% endblock %}
