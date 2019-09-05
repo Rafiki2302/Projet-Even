@@ -18,7 +18,7 @@ class AnnulSortieType extends AbstractType
             "required"=>false,
             "trim"=>true,"label"=>"Motif :",
             "mapped"=>false])
-        ->add('submit',SubmitType::class,["label"=>"Enregistrer"])
+        ->add('submit',SubmitType::class,["label"=>"Valider l'annulation"])
         ;
 
     }

@@ -11,11 +11,11 @@
                 <tbody>
                     <tr>
                         <th>Date et heure de la sortie : </th>
-                        <td>{{ sortie.datedebut ? sortie.datedebut|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ sortie.datedebut ? sortie.datedebut|date('Y-m-d H:i:s', 'Europe/Paris') : '' }}</td>
                     </tr>
                     <tr>
                         <th>Date limite d'inscription : </th>
-                        <td>{{ sortie.datecloture ? sortie.datecloture|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ sortie.datecloture ? sortie.datecloture|date('Y-m-d H:i:s', 'Europe/Paris') : '' }}</td>
                     </tr>
                     <tr>
                         <th>Nombre d'inscrits / Places </th>

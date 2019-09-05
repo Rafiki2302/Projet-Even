@@ -19,8 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
+use DateTimeZone;
 
 /**
  * @Route("/sortie")
@@ -162,6 +161,9 @@ class SortieController extends Controller
                     $sortie->setEtat($etat);
                     $this->addFlash('info',"La sortie a bien été publiée !");
                 }
+
+               $sortie = $this->convertDateAvantInsertBDD($sortie);
+
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($sortie);
                 $entityManager->flush();
@@ -195,6 +197,8 @@ class SortieController extends Controller
         }
         else{
 
+            $sortie = $this->convertDateRecupBDD($sortie);
+
             return $this->render('sortie/show.html.twig', [
                 'sortie' => $sortie,
             ]);
@@ -213,6 +217,8 @@ class SortieController extends Controller
             return $this->redirecToAccueil();
         }
         else {
+
+            $sortie = $this->convertDateRecupBDD($sortie);
             $form = $this->createForm(SortieType::class, $sortie);
             $form->handleRequest($request);
 
@@ -232,6 +238,10 @@ class SortieController extends Controller
                     $this->addFlash('info', "La sortie a bien été publiée !");
                 }
 
+                $heureParis = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
+
+                $sortieModif = $this->convertDateAvantInsertBDD($sortie);
+                $entityManager->persist($sortieModif);
                 $this->getDoctrine()->getManager()->flush();
 
 
@@ -388,9 +398,38 @@ class SortieController extends Controller
     }
     */
 
-    function redirecToAccueil(){
+    private function redirecToAccueil(){
         $this->addFlash("erreur","Vous n'avez pas le droit d'accéder à cette page");
         return $this->redirectToRoute("sortie_index");
+    }
+
+    private function convertDateAvantInsertBDD(Sortie $sortie){
+        $dateCloture = $sortie->getDatecloture();
+        $dateDebut = $sortie->getDatedebut();
+        //on les transforme en heure de paris pour calculer le différentiel
+        date_timezone_set($dateCloture, timezone_open('Europe/Paris'));
+        date_timezone_set($dateDebut, timezone_open('Europe/Paris'));
+        //on calcule le différentiel entre l'heure de paris et l'utc à ces dates précises
+        $offsetDateCloture = $dateCloture->getOffset();
+        $offsetDateDebut = $dateDebut->getOffset();
+        //On reset les dates à leur format initial avant insertion
+        date_timezone_set($dateCloture, timezone_open('UTC'));
+        date_timezone_set($dateDebut, timezone_open('UTC'));
+        //on set les dates en soustrayant le décalage entre heure de paris et utc
+        $sortie->setDatecloture($dateCloture->sub( new \DateInterval('PT'.$offsetDateCloture.'S')));
+        $sortie->setDatedebut($dateDebut->sub( new \DateInterval('PT'.$offsetDateDebut.'S')));
+
+        return $sortie;
+    }
+
+    private function convertDateRecupBDD(Sortie $sortie){
+        $dateCloture = $sortie->getDatecloture();
+        $dateDebut = $sortie->getDatedebut();
+
+        date_timezone_set($dateCloture, timezone_open('Europe/Paris'));
+        date_timezone_set($dateDebut, timezone_open('Europe/Paris'));
+
+        return $sortie;
     }
 }
 
