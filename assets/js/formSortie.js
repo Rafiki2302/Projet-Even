@@ -35,8 +35,7 @@ function enregistrerLieu(lieu){
         data: {lieu: lieu}
     }).done(function (msg) {
         $("#messErreur").remove();
-        console.log(JSON.parse(msg["data"]).erreur);
-        if(JSON.parse(msg["data"]) !== undefined){
+        if(JSON.parse(msg["data"]).erreur !== undefined){
             let tabErreurs = JSON.parse(msg["data"]).erreur;
             $("<div id='messErreur'>").insertBefore("#sortie_nouveauLieu");
             for(var attrib in tabErreurs){

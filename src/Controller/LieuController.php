@@ -75,13 +75,15 @@ class LieuController extends Controller
             $latitude = $lieuJS['latitude'];
             $longitude = $lieuJS['longitude'];
 
+            //transformation des virgules en point pour ce soit convertible en float
             if(strpos($latitude,",")){
                 $latitude = str_replace(",",".",$latitude);
             }
             if(strpos($longitude,",")){
                 $longitude = str_replace(",",".",$longitude);
             }
-            if(preg_match("#^-?[0-9]*\.?[0-9]*$$#",$latitude) === 0){
+            //si la lat et la longitude ne sont pas au bon format (ex : 12.345), on envoie un message d'erreur
+            if(preg_match("#^-?[0-9]*\.?[0-9]*$$#",$latitude) === 0 && $latitude !== ''){
 
                 $message["errLat"] = "La latitude doit être comprise entre -90 et 90 degrés";
             }
@@ -90,7 +92,7 @@ class LieuController extends Controller
                     $lieu->setLatitude(floatval($latitude));
                 }
             }
-            if(preg_match("#^-?[0-9]*[\.,]?[0-9]*$#",$longitude) === 0){
+            if(preg_match("#^-?[0-9]*[\.,]?[0-9]*$#",$longitude) === 0 && $longitude !== ''){
                 $message["errLong"] = "La longitude doit être comprise entre -90 et 90 degrés";
             }
             else{
