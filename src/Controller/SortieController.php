@@ -60,6 +60,7 @@ class SortieController extends Controller
 
             if ($orga)  {
                 $sorties2 = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
+                dump($sorties2);
                 $sorties3=$sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
