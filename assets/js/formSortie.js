@@ -3,25 +3,11 @@ const $ = require('jquery');
 
 $(document).ready(function ($) {
     affLieu($);
-
-    /*
-    méthode permettant d'éviter les conflits avec d'autres librairies
-    elle est utilisée ici pour faire appel à la méthode .modal associée à la modale bootstrap
-    rérérence : https://learn.jquery.com/using-jquery-core/avoid-conflicts-other-libraries/
-    */
-    $j = jQuery.noConflict();
-
 });
 
 $("#sortie_lieu").change(function (event) {
     affLieu();
 });
-
-$("#testSelect").click(function(event){
-    var compteur = 3;
-    $("#sortie_lieu option[value='5']").prop('selected',true);
-    compteur++;
-})
 
 $("#enregistrerLieu").click(function (event) {
    var nomLieu = $("#sortie_nouveauLieu_nom").val();
@@ -49,20 +35,29 @@ function enregistrerLieu(lieu){
         data: {lieu: lieu}
     }).done(function (msg) {
         $("#messErreur").remove();
-        console.log(JSON.parse(msg['data']).erreur);
-        if(JSON.parse(msg["data"]).erreur !== undefined){
-            $("<p id='messErreur'>"+JSON.parse(msg["data"]).erreur+"</p>").insertBefore("#sortie_nouveauLieu");
+        console.log(JSON.parse(msg["data"]).erreur);
+        if(JSON.parse(msg["data"]) !== undefined){
+            let tabErreurs = JSON.parse(msg["data"]).erreur;
+            $("<div id='messErreur'>").insertBefore("#sortie_nouveauLieu");
+            for(var attrib in tabErreurs){
+                $("#messErreur").append($("<p'>"+tabErreurs[attrib]+"</p>"));
+            }
         }
         else{
             var lieu = JSON.parse(msg["data"]);
-            console.log(lieu);
             $("#sortie_lieu option:selected").prop('selected',false);
             $("#sortie_lieu").append(new Option(lieu.nomLieu,lieu.idLieu,true,true));
             $("#sortie_lieu:last-child").prop('selected',true);
             affLieu();
+            $("<p>"+"Nouveau lieu créé !"+"</p>").insertBefore("#sortie_nouveauLieu");
+            $(".modal-footer").empty();
+            var nouvelElement = $("<button/>",{
+                html: "Retour à la création de la sortie",
+                class: "btn btn-primary",
+            });
+            $(".modal-footer").append(nouvelElement);
 
-            //ferme la modale bootstrap via la variable appelant la méthode noConflict()
-            $j("#exampleModal").modal('hide');
+
 
         }
 

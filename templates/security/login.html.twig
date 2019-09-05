@@ -5,6 +5,7 @@
 {% block body %}
 <div class="str-login-block">
     <form method="post">
+        {{ include('_aff_messages_info.html.twig') }}
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
@@ -50,6 +51,11 @@
                     <div class="str-forgot-password">
                         <label>
                             <a href="#">Mot de passe oublié</a>
+                        </label>
+                    </div>
+                    <div class="button">
+                        <label>
+                            <a href="{{ path('participant_new') }}">Créer un compte</a>
                         </label>
                     </div>
                 </div>

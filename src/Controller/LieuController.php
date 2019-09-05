@@ -8,6 +8,7 @@ use App\Repository\LieuRepository;
 use App\Service\LieuService;
 use App\Service\UtilService;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,15 +23,19 @@ class LieuController extends Controller
     /**
      * @Route("/", name="lieu_index", methods={"GET"})
      */
+    /*
     public function index(LieuRepository $lieuRepository): Response
     {
         return $this->render('lieu/index.html.twig', [
             'lieus' => $lieuRepository->findAll(),
         ]);
     }
+    */
 
     /**
      * @Route("/new", name="lieu_new", methods={"GET","POST"})
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request, EntityManagerInterface $entityManager, LieuService $lieuService): Response
     {
@@ -65,19 +70,41 @@ class LieuController extends Controller
             //On reconstruit une entité lieu dans symfony
             $lieu->setNom($lieuJS['nom']);
             $lieu->setRue($lieuJS['rue']);
-            if ($lieuJS['latitude'] !== ''){
-                $lieu->setLatitude(intval($lieuJS['latitude']));
+
+            $message = [];
+            $latitude = $lieuJS['latitude'];
+            $longitude = $lieuJS['longitude'];
+
+            if(strpos($latitude,",")){
+                $latitude = str_replace(",",".",$latitude);
             }
-            if($lieuJS['longitude'] !== ''){
-                $lieu->setLongitude(intval($lieuJS['longitude']));
+            if(strpos($longitude,",")){
+                $longitude = str_replace(",",".",$longitude);
+            }
+            if(preg_match("#^-?[0-9]*\.?[0-9]*$$#",$latitude) === 0){
+
+                $message["errLat"] = "La latitude doit être comprise entre -90 et 90 degrés";
+            }
+            else{
+                if ($latitude !== ''){
+                    $lieu->setLatitude(floatval($latitude));
+                }
+            }
+            if(preg_match("#^-?[0-9]*[\.,]?[0-9]*$#",$longitude) === 0){
+                $message["errLong"] = "La longitude doit être comprise entre -90 et 90 degrés";
+            }
+            else{
+                if($longitude !== ''){
+                    $lieu->setLongitude(floatval($longitude));
+                }
             }
             $lieu->setVille($entityManager->getRepository("App:Ville")->find($lieuJS['idVille']));
 
             //On checke si les données sont ok, si ko envoi d'un message d'erreur en ajax, sinon on insère le lieu en bdd
-            $message = $lieuService->validerLieu($lieu);
-            $tabInfos = ["erreur"=>$message];
-            if($message !== ""){
-                return new JsonResponse(["data" => json_encode($tabInfos)]);
+            $message = array_merge($message,$lieuService->validerLieu($lieu));
+            $tabErreurs = ["erreur"=>$message];
+            if(count($message) !== 0){
+                return new JsonResponse(["data" => json_encode($tabErreurs)]);
             }
             else{
                 $entityManager->persist($lieu);
@@ -118,16 +145,19 @@ class LieuController extends Controller
     /**
      * @Route("/{id}", name="lieu_show", methods={"GET"})
      */
+    /*
     public function show(Lieu $lieu): Response
     {
         return $this->render('lieu/show.html.twig', [
             'lieu' => $lieu,
         ]);
     }
+    */
 
     /**
      * @Route("/{id}/edit", name="lieu_edit", methods={"GET","POST"})
      */
+    /*
     public function edit(Request $request, Lieu $lieu, UtilService $utilService): Response
     {
         $form = $this->createForm(LieuType::class, $lieu);
@@ -144,10 +174,12 @@ class LieuController extends Controller
             'form' => $form->createView(),
         ]);
     }
+    */
 
     /**
      * @Route("/{id}", name="lieu_delete", methods={"DELETE"})
      */
+    /*
     public function delete(Request $request, Lieu $lieu): Response
     {
         if ($this->isCsrfTokenValid('delete'.$lieu->getId(), $request->request->get('_token'))) {
@@ -158,10 +190,12 @@ class LieuController extends Controller
 
         return $this->redirectToRoute('lieu_index');
     }
+    */
 
     /**
      * @Route("/infos", name="lieu_infos")
      *
+     * @IsGranted("ROLE_USER")
      * Méthode permettant d'envoyer les infos principales d'un lieu à partir de son id,
      * via une requête ajax
      */

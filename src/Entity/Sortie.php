@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
 /**
@@ -31,12 +32,13 @@ class Sortie
      * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @var string A "Y-m-d" formatted value
      * @Assert\GreaterThan("today", message="La date de début doit être supérieure à la date actuelle")
+     *
      */
     private $datedebut;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Le champ doit être rempli !")
      * @Assert\GreaterThan(0,message="La durée de l'événement ne peut pas être négative")
      */
     private $duree;
@@ -47,6 +49,7 @@ class Sortie
      * @Assert\DateTime(message="Format de date invalide")
      * @var string A "Y-m-d" formatted value
      * @Assert\GreaterThan("today", message="La date de clôture doit être supérieure à la date actuelle")
+     * @Assert\Expression("value < this.getDatedebut()", message= "cette date doit être antérieure à celle de l'évènement")
      */
     private $datecloture;
 
@@ -262,7 +265,7 @@ class Sortie
     /**
      * @return string
      */
-    public function getMotifAnnul(): string
+    public function getMotifAnnul(): ?string
     {
         return $this->motifAnnul;
     }
@@ -270,7 +273,7 @@ class Sortie
     /**
      * @param string $motifAnnul
      */
-    public function setMotifAnnul(string $motifAnnul): void
+    public function setMotifAnnul(?string $motifAnnul): void
     {
         $this->motifAnnul = $motifAnnul;
     }

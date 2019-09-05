@@ -18,16 +18,19 @@ class SiteController extends Controller
     /**
      * @Route("/", name="site_index", methods={"GET"})
      */
+    /*
     public function index(SiteRepository $siteRepository): Response
     {
         return $this->render('site/index.html.twig', [
             'sites' => $siteRepository->findAll(),
         ]);
     }
+    */
 
     /**
      * @Route("/new", name="site_new", methods={"GET","POST"})
      */
+    /*
     public function new(Request $request): Response
     {
         $site = new Site();
@@ -35,8 +38,6 @@ class SiteController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($form->getData());
-            exit();
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($site);
             $entityManager->flush();
@@ -49,20 +50,24 @@ class SiteController extends Controller
             'form' => $form->createView(),
         ]);
     }
+    */
 
     /**
      * @Route("/{id}", name="site_show", methods={"GET"})
      */
+    /*
     public function show(Site $site): Response
     {
         return $this->render('site/show.html.twig', [
             'site' => $site,
         ]);
     }
+    */
 
     /**
      * @Route("/{id}/edit", name="site_edit", methods={"GET","POST"})
      */
+    /*
     public function edit(Request $request, Site $site): Response
     {
         $form = $this->createForm(SiteType::class, $site);
@@ -79,10 +84,12 @@ class SiteController extends Controller
             'form' => $form->createView(),
         ]);
     }
+    */
 
     /**
      * @Route("/{id}", name="site_delete", methods={"DELETE"})
      */
+    /*
     public function delete(Request $request, Site $site): Response
     {
         if ($this->isCsrfTokenValid('delete'.$site->getId(), $request->request->get('_token'))) {
@@ -93,4 +100,5 @@ class SiteController extends Controller
 
         return $this->redirectToRoute('site_index');
     }
+    */
 }
