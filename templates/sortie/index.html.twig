@@ -48,10 +48,12 @@
             <tbody>
             {% for sortie in sorties %}
 
+                {% if app.user is not same as (sortie.organisateur) and sortie.etat.id == 1 %}
+                <tr style="display: none;">
 
-                <tr>
-                    {# {% if sortie.etat.id == 1 and app.user is not sortie.organisateur  %}#}
-                    {#{% else %}#}
+                </tr>
+                    {% else %}
+                        <tr>
                         <td>{{ sortie.nom }}</td>
                         <td>{{ sortie.datedebut ? sortie.datedebut|date('d/m/Y H:i:s') : '' }}</td>
                         <td>{{ sortie.duree }}</td>
@@ -77,7 +79,7 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                   {# {% endif %}#}
+                   {% endif %}
                 </tr>
 
             {% else %}
