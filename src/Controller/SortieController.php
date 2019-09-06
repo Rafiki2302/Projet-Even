@@ -51,23 +51,26 @@ class SortieController extends Controller
         $pasInsc =$formRecherche->get('sortiesPasInsc')->getData();
         $pass =  $formRecherche->get('sortiesPass')->getData();
 
-        /*filtres cumulatifs : l'array $sorties est alimentée au fur et à mesure des filtres
-            les filtres sélectifs sont traités dans le repository*/
+        /*filtres cumulatifs (disjoints) : l'array $sorties est alimentée au fur et à mesure des filtres
+            les filtres sélectifs sont traités ensuite dans le repository*/
+
         if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
+            /*aucun filtre cumulatif n'est sélectionné*/
            if(!$orga && !$insc && !$pasInsc && !$pass){
                $sorties = $sortieRepository->findBySeveralFields($p1, $user, $p4, $p2, $p3);
            }
-
+            /*passage par le filtre 'sorties que j'organise'*/
             if ($orga)  {
                 $sorties2 = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
                 $sorties3=$sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
+            /*passage par le filtre 'sorties auxquelles je suis inscrit.e'*/
             if ($insc){
                 $sorties3 = $sortieRepository->findInsc($p1,$p2,$p3, $user,$p4);
                 $sorties = array_merge ($sorties2, $sorties3);
-
 			}
+            /*passage par le filtre 'sorties auxquelles je peux m'inscrire'*/
             if ($pasInsc){
                 $sortiesI = [];
                 $sortiesO = [];
@@ -84,6 +87,7 @@ class SortieController extends Controller
                 $sorties3 = $sorties;
                 $sorties = array_merge ($sortiesS, $sorties3);
 			}
+            /* passage par le filtre 'sorties passées'*/
             if ($pass){
                 $sorties2 = $sortieRepository->findPass($p1,$p2,$p3, $user,$p4);
                 $sorties3 = $sorties;
