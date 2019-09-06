@@ -60,7 +60,6 @@ class SortieController extends Controller
 
             if ($orga)  {
                 $sorties2 = $sortieRepository->findOrga($p1,$p2,$p3, $user,$p4);
-                dump($sorties2);
                 $sorties3=$sorties;
                 $sorties = array_merge ($sorties2, $sorties3);
 			}
@@ -99,7 +98,8 @@ class SortieController extends Controller
            /* mise à jour des états des sorties au premier affichage */
 
             foreach ($sorties as $sortie){
-                if($sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(['libelle' => 'Créée'])[0]){
+                if($sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(['libelle' => 'Créée'])[0]
+                && $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(['libelle' => 'Annulée'])[0]){
 
                     date_timezone_set($sortie->getDatecloture(), timezone_open('Europe/Paris'));
                     date_timezone_set($sortie->getDatedebut(), timezone_open('Europe/Paris'));
@@ -342,8 +342,10 @@ class SortieController extends Controller
         $dateActuelle = new \DateTime('now');
 
         if($this->getUser() !== $sortie->getOrganisateur()
-            || $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
-        || $dateActuelle>$sortie->getDatecloture()){
+            || ($sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Ouverte"])[0]
+            &&  $sortie->getEtat() !== $entityManager->getRepository("App:Etat")->findBy(["libelle"=>"Clôturée"])[0])
+        || $dateActuelle>$sortie->getDatedebut()){
+
             return $this->redirecToAccueil();
         }
         else{

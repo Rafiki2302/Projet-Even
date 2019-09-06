@@ -28,7 +28,7 @@ class SortieRepository extends ServiceEntityRepository
      * @return Sortie[] Returns an array of Sortie objects
      */
 
-
+/*toutes les sorties*/
     public function findOrder()
     {
         return $this->createQueryBuilder('s')
@@ -38,14 +38,15 @@ class SortieRepository extends ServiceEntityRepository
         ;
     }
 
+    /*filtre de toutes les sorties organisées par le user*/
     public function findOrga(Site $site, $date1, $date2, Participant $user, $nom): ?array
     {
         $qb = $this->createQueryBuilder('s')
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datedebut > :dateJ')
-            ->setParameter('dateJ', new \DateTime('now'))
+           /* ->andWhere('s.datedebut > :dateJ')
+            ->setParameter('dateJ', new \DateTime('now'))*/
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)
             ->andWhere('s.datedebut<= :date2')
@@ -59,14 +60,15 @@ class SortieRepository extends ServiceEntityRepository
 			 return $qb->getQuery()->getResult();
 	}
 
+	/*filtre de toutes les sorties auxquelle user est inscrit*/
     public function findInsc( Site $site, $date1, $date2, Participant $user, $nom): ?array
     {
         $qb = $this->createQueryBuilder('s')
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datedebut > :dateJ')
-            ->setParameter('dateJ', new \DateTime('now'))
+            /*->andWhere('s.datedebut > :dateJ')
+            ->setParameter('dateJ', new \DateTime('now'))*/
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)
             ->andWhere('s.datedebut<= :date2')
@@ -79,15 +81,17 @@ class SortieRepository extends ServiceEntityRepository
             }
 			 return $qb->getQuery()->getResult();
 	}
-
+/* filtre de toutes les sorties passées*/
     public function findPass( Site $site, $date1, $date2, Participant $user, $nom): ?array
     {
         $qb = $this->createQueryBuilder('s')
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datedebut < :dateJ')
-            ->setParameter('dateJ', new \DateTime('now'))
+            ->innerJoin('s.etat', 'etat', 'WITH', 'etat.id = :id' )
+            /*->andWhere('s.datedebut < :dateJ')
+            ->setParameter('dateJ', new \DateTime('now'))*/
+            ->setParameter('id', 5)
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)
             ->andWhere('s.datedebut<= :date2')
@@ -107,8 +111,8 @@ class SortieRepository extends ServiceEntityRepository
             ->innerJoin('s.site', 'site', 'WITH', 'site.nom = :site')
             ->setMaxResults(10)
             ->setParameter('site', $site->getNom())
-            ->andWhere('s.datedebut > :dateJ')
-            ->setParameter('dateJ', new \DateTime('now'))
+           /* ->andWhere('s.datedebut > :dateJ')
+            ->setParameter('dateJ', new \DateTime('now'))*/
             ->andWhere('s.datedebut>= :date1')
             ->setParameter('date1', $date1)
             ->andWhere('s.datedebut<= :date2')

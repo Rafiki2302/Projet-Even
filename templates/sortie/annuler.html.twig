@@ -30,7 +30,7 @@
             </table>
             {{ form_start(form) }}
             {{ form_end(form) }}
-            <a href="#">Retour</a>
         </div>
+        <a href="{{ path('sortie_index', {'id': sortie.id}) }}" class="btn btn-secondary">Retour à l'accueil</a>
     </div>
 {% endblock %}

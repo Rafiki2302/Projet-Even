@@ -13,16 +13,16 @@
             <p id="codeP"></p>
             <p id="latitude"></p>
             <p id="longitude"></p>
-            <!-- Button activante la fenêtre modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <!-- Bouton activant la fenêtre modal -->
+            <button type="button" id="btnModal" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Créer un nouveau lieu de sortie
             </button>
-            <!-- Modal -->
+
 
             {{ form_row(form.enreg) }}
             {{ form_row(form.publi) }}
-           {#{{ include('sortie/_publie_form.html.twig') }} #}
 
+           {# modal #}
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">

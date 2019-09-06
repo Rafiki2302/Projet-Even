@@ -5,11 +5,11 @@
 {% block body %}
 <div class="str-login-block">
     <form method="post">
-        {{ include('_aff_messages_info.html.twig') }}
+
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
-
+        {{ include('_aff_messages_info.html.twig') }}
         {% if app.user %}
             <div class="mb-3">
                 <p>Vous êtes connecté en tant que {{ app.user.username }}</p><a href="{{ path('app_logout') }}">Se déconnecter</a>

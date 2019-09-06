@@ -104,6 +104,18 @@ class Sortie
      */
     private $site;
 
+    /**
+     * Sortie constructor.
+     * @param string $datedebut
+     * @param string $datecloture
+     */
+    public function __construct()
+    {
+        $this->datedebut = new \DateTime("now",new \DateTimeZone("Europe/Paris"));
+        $this->datecloture = new \DateTime("now",new \DateTimeZone("Europe/Paris"));
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;

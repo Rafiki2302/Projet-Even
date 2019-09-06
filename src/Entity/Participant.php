@@ -87,6 +87,8 @@ class Participant implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Media", inversedBy="participant", cascade={"persist"})
+     *
+     * @Assert\Valid()
      */
     private $media;
 

@@ -39,9 +39,15 @@
                     </tr>
                     {{ include('sortie/_aff_lieu_ds_sortie_html_twig')}}
                     <tr>
-                        <th>Etat</th>
+                        <th>Statut :</th>
                         <td>{{ sortie.etat.libelle }}</td>
                     </tr>
+                {% if sortie.etat.libelle is same as('Annulée') %}
+                    <tr>
+                        <th>Motif d'annulation : </th>
+                        <td>{{ sortie.motifAnnul }}</td>
+                    </tr>
+                {% endif %}
                 </tbody>
             </table>
             <div class="col-lg-3">
@@ -58,18 +64,17 @@
                 </table>
             </div>
             <div class="col-lg-3">
-                {% if app.user not in sortie.participants and app.user is not same as(sortie.organisateur) and sortie.etat.libelle is same as('Ouverte')%}
+                {% if app.user not in sortie.participants and app.user is not same as(sortie.organisateur) and sortie.etat.libelle is same as('Ouverte') and date(sortie.datecloture) > date("now") %}
                 <a href="{{ path('sortie_insc',{'id':sortie.id}) }}" class="btn btn-success">S'inscrire</a>
                 {% endif %}
-                {% if app.user in sortie.participants %}
+                {% if app.user in sortie.participants and app.user is not same as(sortie.organisateur) and sortie.etat.libelle is same as('Ouverte') and date(sortie.datecloture) > date("now") %}
                 <a href="{{ path('sortie_insc',{'id':sortie.id}) }}" class="btn btn-danger">Se désister</a>
                 {% endif %}
-
                 {% if app.user is same as(sortie.organisateur) and sortie.etat.libelle is same as('Créée') %}
                 <a href="{{ path('sortie_edit',{'id': sortie.id}) }}" class="btn btn-success">Modifier</a>
                     {{ include('sortie/_delete_form.html.twig')}}
                 {% endif %}
-                {% if app.user is same as(sortie.organisateur) and sortie.etat.libelle is same as('Ouverte') %}
+                {% if app.user is same as(sortie.organisateur) and (sortie.etat.libelle == "Ouverte" or sortie.etat.libelle == "Clôturée") and date(sortie.datedebut) > date("now") %}
                 <a href="{{ path('sortie_annul',{"id":sortie.id}) }}" class="btn btn-success">Annuler la sortie</a>
                 {% endif %}
 

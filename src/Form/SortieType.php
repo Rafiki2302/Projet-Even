@@ -32,18 +32,20 @@ class SortieType extends AbstractType
             ])
             ->add('duree', NumberType::class,[
                 //  "trim" => true,
-                "label" => "Durée prévue",
+                "label" => "Durée prévue (en minutes)",
                 "required"=>false,
                 "invalid_message"=>"La durée doit être un nombre",
                 ])
             ->add('datecloture', DateTimeType::class, [
                 //  "trim" => true,
                 "label" => "Date limite d'inscription",
+
             ])
             ->add('datedebut', DateTimeType::class, [
                 //  "trim" => true,
                 "label" => "Date",
                 "required"=>false,
+
             ])
             ->add('nbinscriptionsmax', NumberType::class,[
                 //  "trim" => true,
